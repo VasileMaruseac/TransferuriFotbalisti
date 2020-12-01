@@ -12,6 +12,10 @@ module.exports = function(sequelize, DataTypes) {
     tara: {
       type: DataTypes.STRING(45),
       allowNull: false
+    },
+    nume: {
+      type: DataTypes.STRING(45),
+      allowNull: false
     }
   }, {
     sequelize,

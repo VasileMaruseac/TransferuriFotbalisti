@@ -30,12 +30,12 @@ exports.renderGetLeague = async (req, res) => {
   console.log("AICI");
   try{
       const s = await ligi.findAll({where: {idLiga: req.params.id}})
-      console.log(s);
+      console.log(s[0].dataValues);
       if(s[0]){
           res.render("leagues/get", {title: 'League', s:s[0].dataValues})
       }
       else{
-          res.redirect('http://localhost:4999')
+          res.redirect('http://localhost:3000')
       }
   }catch(err){
       res.send(err.message)
@@ -44,9 +44,9 @@ exports.renderGetLeague = async (req, res) => {
 
 exports.renderGetAllLeagues = async (req, res) => {
   try{
-      res.render('leagues/getAll', {title: 'Leagues list'})
+    const s = await ligi.findAll()
+      res.render('leagues/getAll', {title: 'Leagues list', s:s})
   }catch(err){
       res.send(err.message)
   }
-
 }

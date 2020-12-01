@@ -1,0 +1,17 @@
+<body>
+  <%- include("./header.ejs") %>
+  <div class="container">
+    <% for ( var i = 0; i< s.length; i++){ %>
+      <div class="row">
+        <div class="col"></div>
+
+        <div class="col-6">
+          
+          <h2><%- s[i].dataValues.nume %></h2>
+        </div>
+        <div class="col"></div>
+      </div>
+      <% } %>
+  </div>
+  <%- include("./footer.ejs") %>
+</body>
