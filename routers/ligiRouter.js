@@ -2,7 +2,7 @@ const express = require("express")
 const router = express.Router()
 var Sequelize = require("sequelize");
 var initModels = require("../models/init-models").initModels; 
-// sequelize-auto -o "./src/modelss" -d citygo -h localhost -u root -p 3306 -x root -e mysql
+
 const mysql = {
     dbname: 'proiectppaw',
     user: 'vasi',
