@@ -1,0 +1,15 @@
+{
+    "files.autoSave": "off",
+    "html.format.enable": false,
+    "files.eol": "\r\n",
+    "[javascript]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "window.zoomLevel": 0,
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "explorer.confirmDelete": false,
+    "workbench.colorTheme": "Darcula Theme from IntelliJ",
+    "typescript.disableAutomaticTypeAcquisition": true
+}

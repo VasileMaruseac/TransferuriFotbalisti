@@ -11,11 +11,13 @@ module.exports = function(sequelize, DataTypes) {
     },
     tara: {
       type: DataTypes.STRING(45),
-      allowNull: false
+      allowNull: false,
+      unique: "tara_UNIQUE"
     },
     nume: {
       type: DataTypes.STRING(45),
-      allowNull: false
+      allowNull: false,
+      unique: "nume_UNIQUE"
     }
   }, {
     sequelize,
@@ -28,6 +30,22 @@ module.exports = function(sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "idLiga" },
+        ]
+      },
+      {
+        name: "tara_UNIQUE",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "tara" },
+        ]
+      },
+      {
+        name: "nume_UNIQUE",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "nume" },
         ]
       },
     ]
