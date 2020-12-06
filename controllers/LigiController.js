@@ -30,7 +30,7 @@ exports.addLeague = async (req, res) => {
   try {
     try {
       const s = await ligi.create(req.body).catch('err');
-      res.send('Created');
+      res.redirect(`/leagues/getAll`);
     } catch (err) {
       console.log(err);
       res.send(err.message);
@@ -81,7 +81,7 @@ exports.updateLeague = async (req, res) => {
       const s = await ligi
         .update(req.body, {where: {idLiga: req.params.id}})
         .catch('err');
-      res.send('Updated');
+      res.redirect(`/leagues/get/${req.params.id}`);
     } catch (err) {
       console.log(err);
       res.send(err.message);

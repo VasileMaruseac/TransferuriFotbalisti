@@ -1,16 +1,20 @@
 <body>
-    { <%- include("./header.ejs") %> }
-    <div class="container">
-        <div class="row">
-          <div class="col"></div>
+  <!-- { <%- include("./header.ejs") %> } -->
+  <div class="container">
+    <% var linkToOneLeague = "/leagues/update/" + s.idLiga;%>
+    <div class="row">
+      <div class="col"></div>
 
-          <div class="col-6">
-            <h2>Id: <%- s.idLiga %></h2>
-            <h2>Tara: <%- s.tara %></h2>
-            <h2>Nume: <%- s.nume %></h2>
-          </div>
-          <div class="col"></div>
-        </div>
+      <div class="col-6">
+        <h2><%- title %></h2>
+        <h2>Id: <%- s.idLiga %></h2>
+        <h2>Tara: <%- s.tara %></h2>
+        <h2>Nume: <%- s.nume %></h2>
+      </div>
+      <div class="col"></div>
     </div>
-    <%- include("./footer.ejs") %>
+    <a href="<%- linkToOneLeague%>"><h2>Editeaza</h2></a>
+    <a href="/leagues/getAll"><h2>Vezi lista</h2></a>
+  </div>
+  <%- include("./footer.ejs") %>
 </body>

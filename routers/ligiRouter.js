@@ -47,7 +47,6 @@ router.get('/getLiga', async (req, res) => {
 });
 
 router.post('/updateLiga/:id', async (req, res) => {
-  console.log('AICI');
   try {
     const s = await ligi
       .update(req.body, {where: {idLiga: req.params.id}})
@@ -57,12 +56,6 @@ router.post('/updateLiga/:id', async (req, res) => {
     console.log(err);
     res.send(err.message);
   }
-  //   try {
-  //     const s = await ligi.create(req.body).catch('err');
-  //     res.send('Created');
-  //   } catch (err) {
-  //     res.send(err.message);
-  //   }
 });
 
 module.exports = router;

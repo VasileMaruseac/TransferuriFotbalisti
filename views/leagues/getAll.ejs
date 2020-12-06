@@ -1,17 +1,18 @@
 <body>
   <%- include("./header.ejs") %>
   <div class="container">
-    <% for ( var i = 0; i< s.length; i++){ %>
-      <div class="row">
-        <div class="col"></div>
+    <% for ( var i = 0; i< s.length; i++){ %> <% var linkToOneLeague =
+    "/leagues/get/" + s[i].dataValues.idLiga;%>
+    <div class="row">
+      <div class="col"></div>
 
-        <div class="col-6">
-          
-          <h2><%- s[i].dataValues.nume %></h2>
-        </div>
-        <div class="col"></div>
+      <div class="col-6">
+        <a href="<%- linkToOneLeague%>"><h2><%- s[i].dataValues.nume %></h2></a>
       </div>
-      <% } %>
+      <div class="col"></div>
+    </div>
+    <% } %>
+    <button><a href="/leagues/add">Creeaza o liga noua</a></button>
   </div>
   <%- include("./footer.ejs") %>
 </body>
