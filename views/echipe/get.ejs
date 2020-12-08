@@ -1,0 +1,18 @@
+<body>
+  <div class="container">
+    <% var linkToOneLeague = "/leagues/update/" + s.idLiga;%>
+    <div class="row">
+      <div class="col"></div>
+
+      <div class="col-6">
+        <h2><%- title %></h2>
+        <h2>Id: <%- s.idEchipa %></h2>
+        <h2>Nume: <%- s.nume %></h2>
+        <h2>Liga: <%- s.idLiga %></h2>
+      </div>
+      <div class="col"></div>
+    </div>
+    <a href="<%- linkToOneLeague%>"><h2>Editeaza</h2></a>
+    <a href="/echipe/getAll"><h2>Vezi lista</h2></a>
+  </div>
+</body>

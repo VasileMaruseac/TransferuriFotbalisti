@@ -1,0 +1,16 @@
+<body>
+  <div class="container">
+    <% for ( var i = 0; i< s.length; i++){ %> <% var linkToOneTeam =
+    "/echipe/get/" + s[i].dataValues.idEchipa;%>
+    <div class="row">
+      <div class="col"></div>
+
+      <div class="col-6">
+        <a href="<%- linkToOneTeam%>"><h2><%- s[i].dataValues.nume %></h2></a>
+      </div>
+      <div class="col"></div>
+    </div>
+    <% } %>
+    <button><a href="/echipe/add">Creeaza o echipa noua</a></button>
+  </div>
+</body>
