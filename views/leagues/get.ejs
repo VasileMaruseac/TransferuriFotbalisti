@@ -4,17 +4,36 @@
     <% var linkToOneLeague = "/leagues/update/" + s.idLiga;%>
     <div class="row">
       <div class="col"></div>
+      <a href="<%- linkToOneLeague%>"><h2>Editeaza liga</h2></a>
+      <a href="/leagues/getAll"><h2>Vezi lista ligi</h2></a>
 
       <div class="col-6">
         <h2><%- title %></h2>
+        <h2>Last updated time: <%- new Date(parseInt(s.lastUpdatedTime)) %></h2>
         <h2>Id: <%- s.idLiga %></h2>
         <h2>Tara: <%- s.tara %></h2>
         <h2>Nume: <%- s.nume %></h2>
+        <br />
+        <h2>Echipe</h2>
+
+        <% for ( var i = 0; i< l.length; i++){ %> <% var linkToOneTeam =
+        "/echipe/get/" + l[i].dataValues.idEchipa;%>
+        <div class="row">
+          <div class="col"></div>
+
+          <div class="col-6">
+            <a href="<%- linkToOneTeam%>"><%- l[i].dataValues.nume %></a>
+            <% const deleteString = "/echipe/delete/" +l[i].dataValues.idEchipa;
+            %>
+            <a href="<%- deleteString%>" data-method="delete">Sterge</a>
+            <!-- <button onclick="<% deleteString%>"> Sterge</button> -->
+          </div>
+          <div class="col"></div>
+        </div>
+        <% } %>
       </div>
       <div class="col"></div>
     </div>
-    <a href="<%- linkToOneLeague%>"><h2>Editeaza</h2></a>
-    <a href="/leagues/getAll"><h2>Vezi lista</h2></a>
   </div>
   <%- include("./footer.ejs") %>
 </body>

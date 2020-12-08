@@ -32,7 +32,6 @@ exports.renderAddEchipa = async (req, res) => {
 exports.addEchipa = async (req, res) => {
   try {
     try {
-      console.log('AICI: ', req.body);
       const s = await echipe.create(req.body).catch('err');
       res.redirect(`/echipe/getAll`);
     } catch (err) {
@@ -65,7 +64,6 @@ exports.renderGetEchipa = async (req, res) => {
 };
 
 exports.renderGetAllEchipe = async (req, res) => {
-  console.log('AICI');
   try {
     const s = await echipe.findAll();
     res.render('echipe/getAll', {title: 'Teams list', s: s});
@@ -74,31 +72,65 @@ exports.renderGetAllEchipe = async (req, res) => {
   }
 };
 
-// exports.renderUpdateLeague = async (req, res) => {
-//   try {
-//     var s = await ligi.findAll({where: {idLiga: req.params.id}});
-//     if (s[0]) {
-//       res.render('leagues/update', {title: 'Liga', s: s[0].dataValues});
-//     } else {
-//       res.redirect('http://localhost:3000');
-//     }
-//   } catch (err) {
-//     res.send(err.message);
-//   }
-// };
+exports.renderUpdateEchipa = async (req, res) => {
+  try {
+    var s = await echipe.findAll({where: {idEchipa: req.params.id}});
+    const l = await ligi.findAll();
+    if (s[0]) {
+      res.render('echipe/update', {title: 'Echipa', s: s[0].dataValues, l: l});
+    } else {
+      res.redirect('http://localhost:3000');
+    }
+  } catch (err) {
+    res.send(err.message);
+  }
+};
 
-// exports.updateLeague = async (req, res) => {
-//   try {
-//     try {
-//       const s = await ligi
-//         .update(req.body, {where: {idLiga: req.params.id}})
-//         .catch('err');
-//       res.redirect(`/leagues/get/${req.params.id}`);
-//     } catch (err) {
-//       console.log(err);
-//       res.send(err.message);
-//     }
-//   } catch (err) {
-//     res.send(err.message);
-//   }
-// };
+exports.updateEchipa = async (req, res) => {
+  try {
+    try {
+      const s = await echipe
+        .update(req.body, {where: {idEchipa: req.params.id}})
+        .catch('err');
+      res.redirect(`/echipe/get/${req.params.id}`);
+    } catch (err) {
+      console.log(err);
+      res.send(err.message);
+    }
+  } catch (err) {
+    res.send(err.message);
+  }
+};
+
+exports.deleteEchipa = async (req, res) => {
+  try {
+    try {
+      var s = await echipe.findAll({where: {idEchipa: req.params.id}});
+      let idLiga;
+      if (s[0]) {
+        idLiga = s[0].dataValues.idLiga;
+        //get liga
+        const l = await ligi.findAll({where: {idLiga: idLiga}});
+        if (l[0]) {
+          await l[0].update(
+            {lastUpdatedTime: new Date().getTime()},
+            {where: {idLiga: idLiga}}
+          );
+        }
+        await s[0].destroy();
+        if (idLiga) {
+          res.redirect('/leagues/get/' + idLiga);
+        } else {
+          res.redirect('/leagues/getAll');
+        }
+      } else {
+        res.redirect('http://localhost:3000');
+      }
+    } catch (err) {
+      console.log(err);
+      res.send(err.message);
+    }
+  } catch (err) {
+    res.send(err.message);
+  }
+};

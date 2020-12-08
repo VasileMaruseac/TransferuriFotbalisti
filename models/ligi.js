@@ -17,6 +17,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(45),
       allowNull: false,
       unique: "nume_UNIQUE"
+    },
+    lastUpdatedTime: {
+      type: DataTypes.STRING(45),
+      allowNull: false
     }
   }, {
     sequelize,

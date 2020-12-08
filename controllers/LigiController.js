@@ -1,4 +1,5 @@
 const express = require('express');
+const {model} = require('mongoose');
 const router = express.Router();
 var Sequelize = require('sequelize');
 var initModels = require('../models/init-models').initModels;
@@ -17,6 +18,7 @@ var sequelize = new Sequelize(
 );
 var models = initModels(sequelize);
 var ligi = models.ligi;
+var echipe = models.echipe;
 
 exports.renderAddLeague = async (req, res) => {
   try {
@@ -43,8 +45,9 @@ exports.addLeague = async (req, res) => {
 exports.renderGetLeague = async (req, res) => {
   try {
     const s = await ligi.findAll({where: {idLiga: req.params.id}});
+    const l = await echipe.findAll({where: {idLiga: req.params.id}});
     if (s[0]) {
-      res.render('leagues/get', {title: 'League', s: s[0].dataValues});
+      res.render('leagues/get', {title: 'League', s: s[0].dataValues, l: l});
     } else {
       res.redirect('http://localhost:3000');
     }
@@ -90,3 +93,7 @@ exports.updateLeague = async (req, res) => {
     res.send(err.message);
   }
 };
+
+// exports.deleteLeague = async (req, res) => {
+
+// }

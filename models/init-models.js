@@ -1,14 +1,14 @@
 var DataTypes = require('sequelize').DataTypes;
-var _ligi = require('./ligi');
 var _echipe = require('./echipe');
+var _ligi = require('./ligi');
 
 function initModels(sequelize) {
-  var ligi = _ligi(sequelize, DataTypes);
   var echipe = _echipe(sequelize, DataTypes);
+  var ligi = _ligi(sequelize, DataTypes);
 
   return {
-    ligi,
     echipe,
+    ligi,
   };
 }
 module.exports = initModels;

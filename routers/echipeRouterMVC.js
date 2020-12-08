@@ -11,8 +11,10 @@ router.get('/echipe/add', controller.renderAddEchipa);
 
 router.post('/echipe/add', controller.addEchipa);
 
-// router.get('/echipe/update/:id', controller.renderUpdateEchipa);
+router.get('/echipe/update/:id', controller.renderUpdateEchipa);
 
-// router.post('/echipe/update/:id', controller.updateEchipa);
+router.post('/echipe/update/:id', controller.updateEchipa);
+
+router.get('/echipe/delete/:id', controller.deleteEchipa);
 
 module.exports = router;
