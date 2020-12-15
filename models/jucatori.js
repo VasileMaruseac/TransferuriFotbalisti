@@ -52,6 +52,6 @@ module.exports = async function (sequelize, DataTypes) {
       ],
     }
   );
-  await Jucatori.sync();
+  await Jucatori.sync({alter: true});
   return Jucatori;
 };

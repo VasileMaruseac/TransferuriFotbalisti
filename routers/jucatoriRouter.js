@@ -21,9 +21,6 @@ var models = initModels(sequelize);
 router.post('/createJucator', async (req, res) => {
   try {
     var jucatori = await models.jucatori;
-    console.log(models);
-    console.log(models.echipe);
-    console.log(jucatori);
     const s = await jucatori.create(req.body).catch('err');
     res.send('Created');
   } catch (err) {

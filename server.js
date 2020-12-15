@@ -6,6 +6,7 @@ const path = require('path');
 var bodyParser = require('body-parser');
 const ligiRouter = require('./routers/ligiRouter');
 const jucatoriRouter = require('./routers/jucatoriRouter');
+const transferuriRouter = require('./routers/transferuriRouter');
 const ligiRouterMVC = require('./routers/ligiRouterMVC');
 const echipeRouterMVC = require('./routers/echipeRouterMVC');
 
@@ -17,6 +18,7 @@ app.use(express.static('views'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(ligiRouter);
 app.use(jucatoriRouter);
+app.use(transferuriRouter);
 app.use(ligiRouterMVC);
 app.use(echipeRouterMVC);
 

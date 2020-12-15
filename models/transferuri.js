@@ -42,6 +42,6 @@ module.exports = async function (sequelize, DataTypes) {
       ],
     }
   );
-  await Transferuri.sync();
+  await Transferuri.sync({alter: true});
   return Transferuri;
 };

@@ -16,10 +16,7 @@ var sequelize = new Sequelize(
   mysql.options
 );
 
-// var models;
 var models = initModels(sequelize);
-// Promise.all(initModels(sequelize)).then(model => models = model);
-
 var ligi = models.ligi;
 
 router.post('/createLiga', async (req, res) => {
