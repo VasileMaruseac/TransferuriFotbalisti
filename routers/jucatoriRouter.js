@@ -16,44 +16,47 @@ var sequelize = new Sequelize(
   mysql.options
 );
 
-// var models;
 var models = initModels(sequelize);
-// Promise.all(initModels(sequelize)).then(model => models = model);
 
-var ligi = models.ligi;
-
-router.post('/createLiga', async (req, res) => {
+router.post('/createJucator', async (req, res) => {
   try {
-    const s = await ligi.create(req.body).catch('err');
+    var jucatori = await models.jucatori;
+    console.log(models);
+    console.log(models.echipe);
+    console.log(jucatori);
+    const s = await jucatori.create(req.body).catch('err');
     res.send('Created');
   } catch (err) {
     res.send(err.message);
   }
 });
 
-router.get('/getLigi', async (req, res) => {
+router.get('/getJucatori', async (req, res) => {
   try {
-    const s = await ligi.findAll();
+    var jucatori = await models.jucatori;
+    const s = await jucatori.findAll();
     res.send(s);
   } catch (err) {
     res.send(err.message);
   }
 });
 
-router.get('/getLiga', async (req, res) => {
+router.get('/getJucator/:id', async (req, res) => {
   try {
+    var jucatori = await models.jucatori;
     const x = req.body;
-    const s = await ligi.findAll({where: x});
+    const s = await jucatori.findAll({where: x});
     res.send(s);
   } catch (err) {
     res.send(err.message);
   }
 });
 
-router.post('/updateLiga/:id', async (req, res) => {
+router.post('/updateJucator/:id', async (req, res) => {
   try {
-    const s = await ligi
-      .update(req.body, {where: {idLiga: req.params.id}})
+    var jucatori = await models.jucatori;
+    const s = await jucatori
+      .update(req.body, {where: {idJucator: req.params.id}})
       .catch('err');
     res.send('Updated');
   } catch (err) {

@@ -5,6 +5,7 @@ const path = require('path');
 // var mysql = require('mysql');
 var bodyParser = require('body-parser');
 const ligiRouter = require('./routers/ligiRouter');
+const jucatoriRouter = require('./routers/jucatoriRouter');
 const ligiRouterMVC = require('./routers/ligiRouterMVC');
 const echipeRouterMVC = require('./routers/echipeRouterMVC');
 
@@ -15,6 +16,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('views'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(ligiRouter);
+app.use(jucatoriRouter);
 app.use(ligiRouterMVC);
 app.use(echipeRouterMVC);
 
