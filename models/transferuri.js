@@ -2,55 +2,45 @@
 
 const Sequelize = require('sequelize');
 module.exports = async function (sequelize, DataTypes) {
-  const Jucatori = sequelize.define(
-    'jucatori',
+  const Transferuri = sequelize.define(
+    'transferuri',
     {
-      idJucator: {
+      idTransfer: {
         autoIncrement: true,
         type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
       },
-      nume: {
-        type: DataTypes.STRING(65),
-        allowNull: false,
-        unique: 'nume_UNIQUE',
-      },
-      nationalitate: {
-        type: DataTypes.STRING(45),
-        allowNull: false,
-      },
-      dataNastere: {
-        type: DataTypes.STRING(13),
-        allowNull: false,
-      },
-      idEchipa: {
+      idJucator: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      valoare: {
+      idEchipaVeche: {
         type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      idEchipaNoua: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      pret: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
       },
     },
     {
       sequelize,
-      tableName: 'jucatori',
+      tableName: 'transferuri',
       timestamps: false,
       indexes: [
         {
           name: 'PRIMARY',
           unique: true,
           using: 'BTREE',
-          fields: [{name: 'idJucator'}],
-        },
-        {
-          name: 'nume_UNIQUE',
-          unique: true,
-          using: 'BTREE',
-          fields: [{name: 'nume'}],
+          fields: [{name: 'idTransfer'}],
         },
       ],
     }
   );
-  await Jucatori.sync();
+  await Transferuri.sync();
 };
