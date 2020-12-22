@@ -23,19 +23,25 @@ router.post('/addTransfer', async (req, res) => {
   try {
     var transferuri = await models.transferuri;
     var jucatori = await models.jucatori;
-    const idEchipaNoua = req.body.idEchipaNoua;
     const idJucator = req.body.idJucator;
-    const s = await transferuri.create(req.body).catch('err');
-
-    //update jucator
-    await jucatori.update(
-      {lastUpdatedTime: new Date().getTime(), idEchipa: idEchipaNoua},
-      {where: {idJucator: idJucator}}
-    );
-
-    res.send('Created');
+    const idEchipaNoua = req.body.idEchipaNoua;
+    const j = await jucatori.findAll({
+      where: {idJucator: idJucator},
+    });
+    req.body.idEchipaVeche = j[0].dataValues.idEchipa + '';
+    if (req.body.idEchipaVeche !== idEchipaNoua) {
+      const s = await transferuri.create(req.body);
+      //update jucator
+      await jucatori.update(
+        {lastUpdatedTime: new Date().getTime(), idEchipa: idEchipaNoua},
+        {where: {idJucator: idJucator}}
+      );
+      res.send('Created');
+    } else {
+      res.status(400).send('Nothing to update');
+    }
   } catch (err) {
-    res.send(err.message);
+    res.status(400).send(err.message);
   }
 });
 

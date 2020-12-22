@@ -176,8 +176,140 @@ getAllTransfers = () => {
 //#endregion
 
 // #region add transfer
-const populateTransfersDropdown = () => {};
+const populateTransfersDropdown = async () => {
+  const jucatori = (await getAllPlayers()).players;
+  let dropdownJuc = dom('jucatori');
+  for (let i = 0; i < jucatori.length; i++) {
+    let option = document.createElement('option');
+    option.id = jucatori[i].idJucator;
+    option.innerHTML = jucatori[i].nume;
+    dropdownJuc.appendChild(option);
+  }
 
-const addTransfer = () => {};
+  const echipe = (await getAllTeams()).teams;
+  let dropdownEchipe = dom('echipe');
+  for (let i = 0; i < echipe.length; i++) {
+    let option = document.createElement('option');
+    option.id = echipe[i].idEchipa;
+    option.innerHTML = echipe[i].nume;
+    dropdownEchipe.appendChild(option);
+  }
+};
+
+const addTransfer = async () => {
+  const j = dom('jucatori');
+  const idJucator = j.options[j.selectedIndex].id;
+  const e = dom('echipe');
+  const idEchipa = e.options[e.selectedIndex].id;
+  const suma = parseInt(dom('pret').value);
+  if (idJucator === 0 || idEchipa === 0 || isNaN(suma) || suma <= 0) {
+    alert('Something wrong');
+  } else {
+    body = {
+      idJucator,
+      idEchipaNoua: idEchipa,
+      pret: suma,
+    };
+
+    const result = await addTransferServer(body);
+    console.log('aici', result);
+    window.location.href = '../html/transferuriList.html';
+  }
+};
+
+const addTransferServer = (body) => {
+  return new Promise(function (resolve, reject) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', '/addTransfer');
+    // the request will send json, UTF8 data
+    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+    xhr.onload = function () {
+      resolve({
+        status: this.status,
+        statusText: xhr.statusText,
+      });
+    };
+    xhr.onerror = function () {
+      reject({
+        status: this.status,
+        statusText: xhr.statusText,
+      });
+    };
+    // transmit the object converted to JSON
+    xhr.send(JSON.stringify(body));
+    // every time when a change in HTTP request status occures
+    xhr.onreadystatechange = function () {
+      // if HTTP request is DONE
+      if (xhr.readyState === 4) {
+        // if status is ok
+        if (xhr.status === 200) {
+          dom('message').innerHTML = 'Success. Transfer is saved.';
+          resolve();
+          // if status is not ok
+          // display error message and the response from server
+        } else {
+          dom('message').innerHTML =
+            'Error. User is not saved. ' + xhr.responseText;
+        }
+      }
+    };
+  });
+};
 //#endregion
+//#endregion
+
+//#region jucatori
+//#region allTeams
+// allTeamsLoad = async () => {
+//   data = await getAllPlayers();
+//   console.log(data);
+//   console.log('Document', document);
+//   if (data.status == 200) {
+//     let ul = dom('players');
+//     const players = [...data.players];
+//     for (let i = 0; i < players.length; i++) {
+//       let li = document.createElement('li');
+//       let a = document.createElement('a');
+//       a.href = '../html/jucatorInfo.html?id=' + players[i].idJucator;
+//       a.innerHTML = players[i].nume;
+//       li.appendChild(a);
+//       ul.appendChild(li);
+//     }
+//   } else {
+//     console.log('EROARE');
+//     alert('No reports');
+//   }
+// };
+
+getAllTeams = () => {
+  return new Promise(function (resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/getEchipe');
+    xhr.onload = function () {
+      if (xhr.status == 200) {
+        resolve({
+          status: this.status,
+          statusText: xhr.statusText,
+          teams: JSON.parse(xhr.response),
+        });
+      } else {
+        resolve({
+          status: this.status,
+          statusText: xhr.statusText,
+        });
+      }
+    };
+    xhr.onerror = function () {
+      reject({
+        status: this.status,
+        statusText: xhr.statusText,
+      });
+    };
+    xhr.send();
+  });
+};
+//#endregion
+
+//#region getOneTeam
+
 //#endregion

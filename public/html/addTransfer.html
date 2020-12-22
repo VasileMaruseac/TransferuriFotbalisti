@@ -12,14 +12,18 @@
   <body onload="populateTransfersDropdown()">
     <h2>Adauga transfer</h2>
     <span class="input-group-text" id="basic-addon1">Jucator</span>
-    <select name="idJucator" id="jucatori"></select
+    <select name="idJucator" id="jucatori">
+      <option id="0"></option></select
     ><br />
     <span class="input-group-text" id="basic-addon1">Echipa Noua</span>
-    <select name="idEchipa" id="echipe"></select>
+    <select name="idEchipa" id="echipe">
+      <option id="0"></option>
+    </select>
     <br />
     <span class="input-group-text" id="basic-addon1">Pret</span>
-    <input type="text" name="pret" class="form-control" />
+    <input type="text" id="pret" class="form-control" />
 
     <br /><button onclick="addTransfer()">Adauga</button>
+    <span class="input-group-text" id="message"></span>
   </body>
 </html>

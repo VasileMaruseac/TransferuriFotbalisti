@@ -9,6 +9,7 @@ const jucatoriRouter = require('./routers/jucatoriRouter');
 const transferuriRouter = require('./routers/transferuriRouter');
 const ligiRouterMVC = require('./routers/ligiRouterMVC');
 const echipeRouterMVC = require('./routers/echipeRouterMVC');
+const echipeRouter = require('./routers/echipeRouter');
 
 var app = express();
 var port = process.env.port || 3000;
@@ -21,6 +22,7 @@ app.use(jucatoriRouter);
 app.use(transferuriRouter);
 app.use(ligiRouterMVC);
 app.use(echipeRouterMVC);
+app.use(echipeRouter);
 
 // app.engine('html', require('ejs').renderFile);
 app.set('views', path.join(__dirname + '/views'));
