@@ -37,15 +37,15 @@ router.get('/getEchipe', async (req, res) => {
   }
 });
 
-//   router.get('/getLiga', async (req, res) => {
-//     try {
-//       const x = req.body;
-//       const s = await ligi.findAll({where: x});
-//       res.send(s);
-//     } catch (err) {
-//       res.send(err.message);
-//     }
-//   });
+router.get('/getEchipa', async (req, res) => {
+  try {
+    const x = req.body;
+    const s = await echipe.findAll({idEchipa: req.params.id});
+    res.send(s);
+  } catch (err) {
+    res.send(err.message);
+  }
+});
 
 //   router.post('/updateLiga/:id', async (req, res) => {
 //     try {

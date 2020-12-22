@@ -15,7 +15,7 @@ module.exports = function(sequelize, DataTypes) {
       unique: "nume_UNIQUE"
     },
     idLiga: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.INTEGER,
       allowNull: false
     }
   }, {
@@ -37,6 +37,13 @@ module.exports = function(sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "nume" },
+        ]
+      },
+      {
+        name: "idLiga_idx",
+        using: "BTREE",
+        fields: [
+          { name: "idLiga" },
         ]
       },
     ]

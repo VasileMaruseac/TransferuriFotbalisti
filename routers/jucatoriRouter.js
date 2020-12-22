@@ -17,6 +17,7 @@ var sequelize = new Sequelize(
 );
 
 var models = initModels(sequelize);
+const echipe = models.echipe;
 
 router.post('/createJucator', async (req, res) => {
   try {
@@ -41,8 +42,7 @@ router.get('/getJucatori', async (req, res) => {
 router.get('/getJucator/:id', async (req, res) => {
   try {
     var jucatori = await models.jucatori;
-    const x = req.body;
-    const s = await jucatori.findAll({where: x});
+    const s = await jucatori.findAll({where: {idJucator: req.params.id}});
     res.send(s);
   } catch (err) {
     res.send(err.message);

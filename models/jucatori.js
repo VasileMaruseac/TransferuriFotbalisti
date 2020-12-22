@@ -30,6 +30,7 @@ module.exports = async function (sequelize, DataTypes) {
       },
       valoare: {
         type: DataTypes.INTEGER,
+        allowNull: true,
       },
     },
     {

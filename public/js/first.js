@@ -112,7 +112,60 @@ getAllPlayers = () => {
 };
 //#endregion
 
-//#region getOneLeague
+//#region getOnePlayer
+const getOnePlayer = (id) => {
+  return new Promise(function (resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/getJucator/' + id);
+    xhr.onload = function () {
+      if (xhr.status == 200) {
+        console.log(xhr.response);
+        resolve({
+          status: this.status,
+          statusText: xhr.statusText,
+          player: JSON.parse(xhr.response)[0],
+        });
+      } else {
+        resolve({
+          status: this.status,
+          statusText: xhr.statusText,
+        });
+      }
+    };
+    xhr.onerror = function () {
+      reject({
+        status: this.status,
+        statusText: xhr.statusText,
+      });
+    };
+    xhr.send();
+  });
+};
+
+const onePlayerLoad = async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const id = urlParams.get('id');
+  let nume = dom('nume');
+  let nationalitate = dom('nationalitate');
+  let dataNastere = dom('dataNastere');
+  let valoare = dom('valoare');
+  let echipa = dom('echipa');
+  console.log(id);
+  let jucator = (await getOnePlayer(id)).player;
+  console.log(jucator);
+  nume.innerHTML += ' ' + jucator.nume;
+  nationalitate.innerHTML += ' ' + jucator.nationalitate;
+  let data = new Date(parseInt(jucator.dataNastere));
+  dataNastere.innerHTML +=
+    ' ' +
+    data.getDate() +
+    '/' +
+    (data.getMonth() + 1) +
+    '/' +
+    data.getFullYear();
+
+  valoare.innerHTML += ' ' + jucator.valoare;
+};
 
 //#endregion
 
@@ -130,7 +183,12 @@ allTransfersLoad = async () => {
       let tdEchipaVeche = document.createElement('td');
       let tdEchipaNoua = document.createElement('td');
       let tdSuma = document.createElement('td');
-      tdNume.innerHTML = transfers[i].numeJucator;
+
+      let link = document.createElement('a');
+      link.href = '../html/jucatorInfo.html?id=' + transfers[i].idJucator;
+      link.innerHTML = transfers[i].numeJucator;
+      tdNume.appendChild(link);
+
       tdEchipaVeche.innerHTML = transfers[i].numeEchipaVeche;
       tdEchipaNoua.innerHTML = transfers[i].numeEchipaNoua;
       tdSuma.innerHTML = transfers[i].pret;
@@ -258,7 +316,7 @@ const addTransferServer = (body) => {
 //#endregion
 //#endregion
 
-//#region jucatori
+//#region teams
 //#region allTeams
 // allTeamsLoad = async () => {
 //   data = await getAllPlayers();
@@ -311,5 +369,32 @@ getAllTeams = () => {
 //#endregion
 
 //#region getOneTeam
-
+const getOneTeam = (id) => {
+  return new Promise(function (resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/getEchipa/' + id);
+    xhr.onload = function () {
+      if (xhr.status == 200) {
+        resolve({
+          status: this.status,
+          statusText: xhr.statusText,
+          player: JSON.parse(xhr.response)[0],
+        });
+      } else {
+        resolve({
+          status: this.status,
+          statusText: xhr.statusText,
+        });
+      }
+    };
+    xhr.onerror = function () {
+      reject({
+        status: this.status,
+        statusText: xhr.statusText,
+      });
+    };
+    xhr.send();
+  });
+};
+//#endregion
 //#endregion
