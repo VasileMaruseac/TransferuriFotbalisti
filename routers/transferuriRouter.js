@@ -17,6 +17,7 @@ var sequelize = new Sequelize(
 );
 
 var models = initModels(sequelize);
+var echipe = models.echipe;
 
 router.post('/addTransfer', async (req, res) => {
   try {
@@ -33,6 +34,48 @@ router.post('/addTransfer', async (req, res) => {
     );
 
     res.send('Created');
+  } catch (err) {
+    res.send(err.message);
+  }
+});
+
+router.get('/getTransfers', async (req, res) => {
+  try {
+    const objPers = {};
+    const objEchipe = {};
+
+    var transferuri = await models.transferuri;
+    var jucatori = await models.jucatori;
+    const t = await transferuri.findAll();
+    for (let i = 0; i < t.length; i++) {
+      const idJucator = t[i].dataValues.idJucator;
+      const idEchipaVeche = t[i].dataValues.idEchipaVeche;
+      const idEchipaNoua = t[i].dataValues.idEchipaNoua;
+      if (!objPers[idJucator]) {
+        const j = await jucatori.findAll({
+          where: {idJucator: idJucator},
+        });
+        objPers[idJucator] = j[0].dataValues.nume;
+      }
+      t[i].dataValues.numeJucator = objPers[idJucator];
+
+      if (!objEchipe[idEchipaVeche]) {
+        const e = await echipe.findAll({
+          where: {idEchipa: idEchipaVeche},
+        });
+        objEchipe[idEchipaVeche] = e[0].dataValues.nume;
+      }
+      t[i].dataValues.numeEchipaVeche = objEchipe[idEchipaVeche];
+
+      if (!objEchipe[idEchipaNoua]) {
+        const e = await echipe.findAll({
+          where: {idEchipa: idEchipaNoua},
+        });
+        objEchipe[idEchipaNoua] = e[0].dataValues.nume;
+      }
+      t[i].dataValues.numeEchipaNoua = objEchipe[idEchipaNoua];
+    }
+    res.send(t);
   } catch (err) {
     res.send(err.message);
   }

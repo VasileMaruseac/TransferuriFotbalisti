@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Istoric transferuri</title>
+    <!-- <link rel="icon" href="../img/logo.svg"> -->
+    <link rel="stylesheet" href="../css/first.css" />
+    <script src="../js/first.js"></script>
+  </head>
+
+  <body onload="populateTransfersDropdown()">
+    <h2>Adauga transfer</h2>
+    <span class="input-group-text" id="basic-addon1">Jucator</span>
+    <select name="idJucator" id="jucatori"></select
+    ><br />
+    <span class="input-group-text" id="basic-addon1">Echipa Noua</span>
+    <select name="idEchipa" id="echipe"></select>
+    <br />
+    <span class="input-group-text" id="basic-addon1">Pret</span>
+    <input type="text" name="pret" class="form-control" />
+
+    <br /><button onclick="addTransfer()">Adauga</button>
+  </body>
+</html>
