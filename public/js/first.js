@@ -123,7 +123,7 @@ const getOnePlayer = (id) => {
         resolve({
           status: this.status,
           statusText: xhr.statusText,
-          player: JSON.parse(xhr.response)[0],
+          player: JSON.parse(xhr.response),
         });
       } else {
         resolve({
@@ -155,6 +155,7 @@ const onePlayerLoad = async () => {
   console.log(jucator);
   nume.innerHTML += ' ' + jucator.nume;
   nationalitate.innerHTML += ' ' + jucator.nationalitate;
+  echipa.innerHTML += ' ' + jucator.numeEchipa;
   let data = new Date(parseInt(jucator.dataNastere));
   dataNastere.innerHTML +=
     ' ' +
@@ -166,23 +167,27 @@ const onePlayerLoad = async () => {
 
   valoare.innerHTML += ' ' + jucator.valoare;
 };
-
 //#endregion
 
 //#region transferuri
 //#region allTransfers
-allTransfersLoad = async () => {
+const allTransfersLoad = async () => {
   data = await getAllTransfers();
   if (data.status == 200) {
     let table = dom('transfers');
     const transfers = [...data.transfers];
-    console.log(transfers);
     for (let i = 0; i < transfers.length; i++) {
       let tr = document.createElement('tr');
       let tdNume = document.createElement('td');
       let tdEchipaVeche = document.createElement('td');
       let tdEchipaNoua = document.createElement('td');
       let tdSuma = document.createElement('td');
+      let tdDelete = document.createElement('input');
+      tdDelete.type = 'button';
+      tdDelete.value = 'Delete';
+      tdDelete.addEventListener('click', function () {
+        deleteTransfer(transfers[i].idTransfer);
+      });
 
       let link = document.createElement('a');
       link.href = '../html/jucatorInfo.html?id=' + transfers[i].idJucator;
@@ -196,15 +201,16 @@ allTransfersLoad = async () => {
       tr.appendChild(tdEchipaVeche);
       tr.appendChild(tdEchipaNoua);
       tr.appendChild(tdSuma);
+      tr.appendChild(tdDelete);
       table.appendChild(tr);
     }
   } else {
     console.log('EROARE');
-    alert('No reports');
+    alert('No transfers');
   }
 };
 
-getAllTransfers = () => {
+const getAllTransfers = () => {
   return new Promise(function (resolve, reject) {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', '/getTransfers');
@@ -311,6 +317,40 @@ const addTransferServer = (body) => {
         }
       }
     };
+  });
+};
+//#endregion
+
+//#region delete Transfer
+const deleteTransfer = async (id) => {
+  await deleteTransferServer(id);
+  window.location.href = '../html/transferuriList.html';
+};
+
+const deleteTransferServer = (id) => {
+  return new Promise(function (resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('DELETE', '/deleteTransfer/' + id);
+    xhr.onload = function () {
+      if (xhr.status == 200) {
+        resolve({
+          status: this.status,
+          statusText: xhr.statusText,
+        });
+      } else {
+        resolve({
+          status: this.status,
+          statusText: xhr.statusText,
+        });
+      }
+    };
+    xhr.onerror = function () {
+      reject({
+        status: this.status,
+        statusText: xhr.statusText,
+      });
+    };
+    xhr.send();
   });
 };
 //#endregion

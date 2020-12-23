@@ -87,6 +87,16 @@ router.get('/getTransfers', async (req, res) => {
   }
 });
 
+router.delete('/deleteTransfer/:id', async (req, res) => {
+  try {
+    var transferuri = await models.transferuri;
+    await transferuri.destroy({where: {idTransfer: req.params.id}});
+    res.send('Deleted');
+  } catch (err) {
+    res.send(err.message);
+  }
+});
+
 // router.get('/getJucatori', async (req, res) => {
 //   try {
 //     var jucatori = await models.jucatori;

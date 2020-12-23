@@ -43,9 +43,19 @@ router.get('/getJucator/:id', async (req, res) => {
   try {
     var jucatori = await models.jucatori;
     const s = await jucatori.findAll({where: {idJucator: req.params.id}});
-    res.send(s);
+    if (s[0]) {
+      let result = s[0].dataValues;
+      const e = await echipe.findAll({where: {idEchipa: result.idEchipa}});
+      result.numeEchipa = e[0].nume;
+
+      console.log(result);
+
+      res.send(result);
+    } else {
+      res.status(404).send('Not found');
+    }
   } catch (err) {
-    res.send(err.message);
+    res.status(400).send(err.message);
   }
 });
 
