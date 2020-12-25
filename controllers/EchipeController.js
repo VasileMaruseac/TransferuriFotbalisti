@@ -103,6 +103,7 @@ exports.updateEchipa = async (req, res) => {
 };
 
 exports.deleteEchipa = async (req, res) => {
+  // [TODO]: To delete logic, not fizic
   try {
     try {
       var s = await echipe.findAll({where: {idEchipa: req.params.id}});
