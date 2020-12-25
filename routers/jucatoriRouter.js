@@ -32,8 +32,23 @@ router.post('/createJucator', async (req, res) => {
 router.get('/getJucatori', async (req, res) => {
   try {
     var jucatori = await models.jucatori;
+    const result = [];
     const s = await jucatori.findAll();
-    res.send(s);
+    const objEchipe = {};
+    for (let i = 0; i < s.length; i++) {
+      const jucatorCurent = s[i].dataValues;
+      if (!jucatorCurent.deleted) {
+        if (!objEchipe[jucatorCurent.idEchipa]) {
+          const e = await echipe.findAll({
+            where: {idEchipa: jucatorCurent.idEchipa},
+          });
+          objEchipe[jucatorCurent.idEchipa] = e[0].dataValues.nume;
+        }
+        jucatorCurent.numeEchipa = objEchipe[jucatorCurent.idEchipa];
+        result.push(s[i]);
+      }
+    }
+    res.send(result);
   } catch (err) {
     res.send(err.message);
   }
@@ -47,8 +62,6 @@ router.get('/getJucator/:id', async (req, res) => {
       let result = s[0].dataValues;
       const e = await echipe.findAll({where: {idEchipa: result.idEchipa}});
       result.numeEchipa = e[0].nume;
-
-      console.log(result);
 
       res.send(result);
     } else {
@@ -66,6 +79,22 @@ router.post('/updateJucator/:id', async (req, res) => {
       .update(req.body, {where: {idJucator: req.params.id}})
       .catch('err');
     res.send('Updated');
+  } catch (err) {
+    console.log(err);
+    res.send(err.message);
+  }
+});
+
+router.delete('/deleteJucator/:id', async (req, res) => {
+  try {
+    var jucatori = await models.jucatori;
+    const s = await jucatori.findAll({where: {idJucator: req.params.id}});
+    const jucator = s[0].dataValues;
+    jucator.deleted = true;
+    await jucatori.update(jucator, {
+      where: {idJucator: req.params.id},
+    });
+    res.send('Deleted');
   } catch (err) {
     console.log(err);
     res.send(err.message);

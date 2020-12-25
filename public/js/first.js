@@ -64,18 +64,31 @@ getAllLeagues = () => {
 //#region allPlayers
 allPlayersLoad = async () => {
   data = await getAllPlayers();
-  console.log(data);
-  console.log('Document', document);
   if (data.status == 200) {
-    let ul = dom('players');
+    let table = dom('players');
     const players = [...data.players];
     for (let i = 0; i < players.length; i++) {
-      let li = document.createElement('li');
-      let a = document.createElement('a');
-      a.href = '../html/jucatorInfo.html?id=' + players[i].idJucator;
-      a.innerHTML = players[i].nume;
-      li.appendChild(a);
-      ul.appendChild(li);
+      let tr = document.createElement('tr');
+      let tdNume = document.createElement('td');
+      let link = document.createElement('a');
+      link.href = '../html/jucatorInfo.html?id=' + players[i].idJucator;
+      link.innerHTML = players[i].nume;
+      tdNume.appendChild(link);
+
+      let tdEchipa = document.createElement('td');
+      tdEchipa.innerHTML = players[i].numeEchipa;
+
+      let tdDelete = document.createElement('input');
+      tdDelete.type = 'button';
+      tdDelete.value = 'Delete';
+      tdDelete.addEventListener('click', function () {
+        deleteJucator(players[i].idJucator);
+      });
+
+      tr.appendChild(tdNume);
+      tr.appendChild(tdEchipa);
+      tr.appendChild(tdDelete);
+      table.appendChild(tr);
     }
   } else {
     console.log('EROARE');
@@ -166,6 +179,40 @@ const onePlayerLoad = async () => {
     data.getFullYear();
 
   valoare.innerHTML += ' ' + jucator.valoare;
+};
+//#endregion
+
+//#region delete Jucator
+const deleteJucator = async (id) => {
+  await deleteJucatorServer(id);
+  window.location.href = '../html/jucatoriList.html';
+};
+
+const deleteJucatorServer = (id) => {
+  return new Promise(function (resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('DELETE', '/deleteJucator/' + id);
+    xhr.onload = function () {
+      if (xhr.status == 200) {
+        resolve({
+          status: this.status,
+          statusText: xhr.statusText,
+        });
+      } else {
+        resolve({
+          status: this.status,
+          statusText: xhr.statusText,
+        });
+      }
+    };
+    xhr.onerror = function () {
+      reject({
+        status: this.status,
+        statusText: xhr.statusText,
+      });
+    };
+    xhr.send();
+  });
 };
 //#endregion
 
