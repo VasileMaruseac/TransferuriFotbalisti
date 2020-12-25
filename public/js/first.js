@@ -9,7 +9,6 @@ const dom = (id) => document.getElementById(id);
 //#region allLeagues
 allLeaguesLoad = async () => {
   data = await getAllLeagues();
-  console.log(data);
   if (data.status == 200) {
     let ul = dom('leagues');
     const leagues = [...data.leagues];
@@ -91,8 +90,7 @@ allPlayersLoad = async () => {
       table.appendChild(tr);
     }
   } else {
-    console.log('EROARE');
-    alert('No reports');
+    alert('EROARE');
   }
 };
 
@@ -132,7 +130,6 @@ const getOnePlayer = (id) => {
     xhr.open('GET', '/getJucator/' + id);
     xhr.onload = function () {
       if (xhr.status == 200) {
-        console.log(xhr.response);
         resolve({
           status: this.status,
           statusText: xhr.statusText,
@@ -163,9 +160,7 @@ const onePlayerLoad = async () => {
   let dataNastere = dom('dataNastere');
   let valoare = dom('valoare');
   let echipa = dom('echipa');
-  console.log(id);
   let jucator = (await getOnePlayer(id)).player;
-  console.log(jucator);
   nume.innerHTML += ' ' + jucator.nume;
   nationalitate.innerHTML += ' ' + jucator.nationalitate;
   echipa.innerHTML += ' ' + jucator.numeEchipa;
@@ -179,6 +174,104 @@ const onePlayerLoad = async () => {
     data.getFullYear();
 
   valoare.innerHTML += ' ' + jucator.valoare;
+  const link = dom('link');
+  link.href += id;
+};
+//#endregion
+
+//#region update Jucator
+const populateInputsUpdateJucator = async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const id = urlParams.get('id');
+  let jucator = (await getOnePlayer(id)).player;
+
+  const echipe = (await getAllTeams()).teams;
+  let dropdownEchipe = dom('echipe');
+  for (let i = 0; i < echipe.length; i++) {
+    let option = document.createElement('option');
+    option.id = echipe[i].idEchipa;
+    option.innerHTML = echipe[i].nume;
+    if (echipe[i].idEchipa === jucator.idEchipa) {
+      option.selected = true;
+    }
+    dropdownEchipe.appendChild(option);
+  }
+  const nume = dom('nume');
+  nume.value = jucator.nume;
+  const nationalitate = dom('nationalitate');
+  nationalitate.value = jucator.nationalitate;
+  const valoare = dom('valoare');
+  valoare.value = jucator.valoare;
+  const date = new Date(parseInt(jucator.dataNastere))
+    .toISOString()
+    .substring(0, 10);
+  const dataNastere = dom('dataNastere');
+  dataNastere.value = date;
+};
+
+const updateJucator = async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const idJucator = parseInt(urlParams.get('id'));
+
+  const e = dom('echipe');
+  const idEchipa = parseInt(e.options[e.selectedIndex].id);
+  console.log(idEchipa, typeof idEchipa, !idEchipa);
+  const nume = dom('nume').value;
+  const nationalitate = dom('nationalitate').value;
+  const dataNastere = new Date(dom('dataNastere').value).getTime();
+  let valoare = dom('valoare').value;
+  if (!idJucator || !idEchipa || isNaN(valoare) || parseInt(valoare) <= 0) {
+    alert('Something wrong');
+    window.location.href = '../html/updateJucator.html?id=' + idJucator;
+  } else {
+    body = {
+      nume,
+      nationalitate,
+      dataNastere,
+      idEchipa,
+      valoare,
+    };
+    await updateJucatorServer(body, idJucator);
+    window.location.href = '../html/jucatorInfo.html?id=' + idJucator;
+  }
+};
+
+const updateJucatorServer = (body, id) => {
+  return new Promise(function (resolve, reject) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', '/updateJucator/' + id);
+    // the request will send json, UTF8 data
+    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+    xhr.onload = function () {
+      resolve({
+        status: this.status,
+        statusText: xhr.statusText,
+      });
+    };
+    xhr.onerror = function () {
+      reject({
+        status: this.status,
+        statusText: xhr.statusText,
+      });
+    };
+    // transmit the object converted to JSON
+    xhr.send(JSON.stringify(body));
+    // every time when a change in HTTP request status occures
+    xhr.onreadystatechange = function () {
+      // if HTTP request is DONE
+      if (xhr.readyState === 4) {
+        // if status is ok
+        if (xhr.status === 200) {
+          dom('message').innerHTML = 'Success. Jucator actualizat.';
+          resolve();
+          // if status is not ok
+          // display error message and the response from server
+        } else {
+          dom('message').innerHTML = 'Error. ' + xhr.responseText;
+        }
+      }
+    };
+  });
 };
 //#endregion
 
@@ -252,7 +345,6 @@ const allTransfersLoad = async () => {
       table.appendChild(tr);
     }
   } else {
-    console.log('EROARE');
     alert('No transfers');
   }
 };
@@ -323,7 +415,6 @@ const addTransfer = async () => {
     };
 
     const result = await addTransferServer(body);
-    console.log('aici', result);
     window.location.href = '../html/transferuriList.html';
   }
 };
@@ -407,8 +498,6 @@ const deleteTransferServer = (id) => {
 //#region allTeams
 // allTeamsLoad = async () => {
 //   data = await getAllPlayers();
-//   console.log(data);
-//   console.log('Document', document);
 //   if (data.status == 200) {
 //     let ul = dom('players');
 //     const players = [...data.players];
@@ -421,7 +510,6 @@ const deleteTransferServer = (id) => {
 //       ul.appendChild(li);
 //     }
 //   } else {
-//     console.log('EROARE');
 //     alert('No reports');
 //   }
 // };

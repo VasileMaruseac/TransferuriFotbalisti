@@ -54,7 +54,6 @@ router.get('/getEchipa', async (req, res) => {
 //         .catch('err');
 //       res.send('Updated');
 //     } catch (err) {
-//       console.log(err);
 //       res.send(err.message);
 //     }
 //   });
