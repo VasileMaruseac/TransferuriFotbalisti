@@ -1,4 +1,6 @@
 const dalLigi = require('../dataLayer/dalLigi');
+const NodeCache = require('node-cache');
+const myCache = new NodeCache();
 
 const addLiga = async (body) => {
   if (!body.nume.trim().length || !body.tara.trim().length) {
@@ -29,9 +31,24 @@ const addLiga = async (body) => {
     }
   }
 
+  myCache.del('allLeagues');
   return 'success';
+};
+
+const getLigi = async () => {
+  const getFromCache = myCache.get('allLeagues');
+  if (getFromCache) {
+    console.log('FROM CACHE');
+    return getFromCache;
+  }
+
+  result = await dalLigi.getAllLeagues();
+  myCache.set('allLeagues', result);
+  console.log('FROM DB');
+  return result;
 };
 
 module.exports = {
   addLiga,
+  getLigi,
 };

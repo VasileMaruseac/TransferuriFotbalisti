@@ -1,6 +1,8 @@
 const dalJucatori = require('../dataLayer/dalJucatori');
 const dalEchipe = require('../dataLayer/dalEchipe');
 const dalTransferuri = require('../dataLayer/dalTransferuri');
+const NodeCache = require('node-cache');
+const myCache = new NodeCache();
 
 const addTransfer = async ({idJucator, idEchipaNoua, pret}) => {
   if (!idJucator || !!idEchipaNoua || isNaN(pret) || pret <= 0) {

@@ -30,11 +30,11 @@ router.post('/createLiga', async (req, res) => {
 });
 
 router.get('/getLigi', async (req, res) => {
-  try {
-    const s = await ligi.findAll();
-    res.send(s);
-  } catch (err) {
-    res.send(err.message);
+  const result = await bllLigi.getLigi();
+  if (result === 'error') {
+    res.status(400).send('error');
+  } else {
+    res.send(result);
   }
 });
 

@@ -29,6 +29,15 @@ const addLeague = async (body) => {
   }
 };
 
+const getAllLeagues = async () => {
+  try {
+    leagues = await ligi.findAll();
+    return leagues;
+  } catch (err) {
+    return 'error';
+  }
+};
+
 const getLigaByName = async (name) => {
   const s = await ligi.findAll({where: {nume: name}});
   if (s[0]) {
@@ -50,6 +59,7 @@ const updateLiga = async (id, body) => {
 
 module.exports = {
   addLeague,
+  getAllLeagues,
   getLigaByName,
   updateLiga,
 };

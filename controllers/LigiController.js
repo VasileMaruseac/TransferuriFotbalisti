@@ -54,7 +54,7 @@ exports.renderGetLeague = async (req, res) => {
 
 exports.renderGetAllLeagues = async (req, res) => {
   try {
-    const s = await ligi.findAll();
+    const s = await bllLigi.getLigi();
     res.render('leagues/getAll', {title: 'Leagues list', s: s});
   } catch (err) {
     res.send(err.message);

@@ -29,6 +29,7 @@
     "mongoose": "^5.10.13",
     "mysql": "^2.18.1",
     "mysql2": "^2.2.5",
+    "node-cache": "^5.1.2",
     "sequelize": "^6.3.5",
     "sequelize-auto": "^0.7.2",
     "typeorm-model-generator": "^0.4.3"
