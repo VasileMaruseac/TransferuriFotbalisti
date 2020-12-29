@@ -21,6 +21,11 @@ module.exports = function(sequelize, DataTypes) {
     lastUpdatedTime: {
       type: DataTypes.STRING(45),
       allowNull: false
+    },
+    deleted: {
+      type: DataTypes.TINYINT,
+      allowNull: false,
+      defaultValue: 0
     }
   }, {
     sequelize,

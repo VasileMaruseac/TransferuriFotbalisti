@@ -33,7 +33,7 @@ module.exports = async function (sequelize, DataTypes) {
         allowNull: true,
       },
       deleted: {
-        type: DataTypes.BOOLEAN,
+        type: DataTypes.TINYINT,
         allowNull: false,
       },
     },

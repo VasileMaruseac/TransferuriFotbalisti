@@ -17,6 +17,15 @@ module.exports = function(sequelize, DataTypes) {
     idLiga: {
       type: DataTypes.INTEGER,
       allowNull: false
+    },
+    buget: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    deleted: {
+      type: DataTypes.TINYINT,
+      allowNull: false,
+      defaultValue: 0
     }
   }, {
     sequelize,

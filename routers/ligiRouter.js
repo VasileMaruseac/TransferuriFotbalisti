@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 var Sequelize = require('sequelize');
 var initModels = require('../models/init-models').initModels;
+const bllLigi = require('../bussinessLogicLayer/bllLigi');
 
 const mysql = {
   dbname: 'proiectppaw',
@@ -20,11 +21,11 @@ var models = initModels(sequelize);
 var ligi = models.ligi;
 
 router.post('/createLiga', async (req, res) => {
-  try {
-    const s = await ligi.create(req.body).catch('err');
+  const result = await bllLigi.addLiga(req.body);
+  if (result === 'success') {
     res.send('Created');
-  } catch (err) {
-    res.send(err.message);
+  } else {
+    res.status(400).send(result);
   }
 });
 

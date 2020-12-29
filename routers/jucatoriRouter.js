@@ -22,6 +22,7 @@ const echipe = models.echipe;
 router.post('/createJucator', async (req, res) => {
   try {
     var jucatori = await models.jucatori;
+    req.body.deleted = false;
     const s = await jucatori.create(req.body).catch('err');
     res.send('Created');
   } catch (err) {

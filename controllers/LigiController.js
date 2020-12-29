@@ -3,6 +3,7 @@ const {model} = require('mongoose');
 const router = express.Router();
 var Sequelize = require('sequelize');
 var initModels = require('../models/init-models').initModels;
+const bllLigi = require('../bussinessLogicLayer/bllLigi');
 
 const mysql = {
   dbname: 'proiectppaw',
@@ -29,16 +30,11 @@ exports.renderAddLeague = async (req, res) => {
 };
 
 exports.addLeague = async (req, res) => {
-  try {
-    try {
-      const s = await ligi.create(req.body).catch('err');
-      res.redirect(`/leagues/getAll`);
-    } catch (err) {
-      console.log(err);
-      res.send(err.message);
-    }
-  } catch (err) {
-    res.send(err.message);
+  const result = await bllLigi.addLiga(req.body);
+  if (result === 'success') {
+    res.redirect(`/leagues/getAll`);
+  } else {
+    res.status(400).send(result);
   }
 };
 

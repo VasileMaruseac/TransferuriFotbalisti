@@ -1,5 +1,5 @@
 <body>
-  <button id="home"><a href="../../public/index.html">Home</a></button>
+  <button id="home"><a href="/">Home</a></button>
   <div class="container">
     <div class="row">
       <div class="col"></div>
@@ -23,6 +23,13 @@
               </option>
               <% } %>
             </select>
+            <span class="input-group-text" id="basic-addon1">Buget</span>
+            <input
+              type="text"
+              value="<%- s.buget %>"
+              name="buget"
+              class="form-control"
+            />
           </div>
           <button type="submit" class="btn btn-primary btn-block">
             Update

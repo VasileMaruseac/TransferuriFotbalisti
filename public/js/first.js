@@ -6,6 +6,64 @@ const dom = (id) => document.getElementById(id);
 // }
 
 //#region ligi
+//#region addLeague
+const addLeague = async () => {
+  const nume = dom('nume').value;
+  const tara = dom('tara').value;
+  body = {
+    nume,
+    tara,
+  };
+
+  const result = await addLeagueServer(body);
+  if (result.status === 200) {
+    window.location.href = '../html/leaguesList.html';
+  }
+};
+
+const addLeagueServer = (body) => {
+  return new Promise(function (resolve, reject) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', '/createLiga');
+    // the request will send json, UTF8 data
+    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+    xhr.onload = function () {
+      resolve({
+        status: this.status,
+        statusText: xhr.statusText,
+      });
+    };
+    xhr.onerror = function () {
+      reject({
+        status: this.status,
+        statusText: xhr.statusText,
+      });
+    };
+    // transmit the object converted to JSON
+    xhr.send(JSON.stringify(body));
+    // every time when a change in HTTP request status occures
+    xhr.onreadystatechange = function () {
+      // if HTTP request is DONE
+      if (xhr.readyState === 4) {
+        // if status is ok
+        if (xhr.status === 200) {
+          dom('message').innerHTML = 'Success. League is saved.';
+          resolve({
+            status: this.status,
+            statusText: xhr.statusText,
+          });
+          // if status is not ok
+          // display error message and the response from server
+        } else {
+          dom('message').innerHTML =
+            'Error. League is not saved. ' + xhr.responseText;
+        }
+      }
+    };
+  });
+};
+//#endregion
+
 //#region allLeagues
 allLeaguesLoad = async () => {
   data = await getAllLeagues();
@@ -415,7 +473,9 @@ const addTransfer = async () => {
     };
 
     const result = await addTransferServer(body);
-    window.location.href = '../html/transferuriList.html';
+    if (result.status === 200) {
+      window.location.href = '../html/transferuriList.html';
+    }
   }
 };
 
@@ -446,7 +506,10 @@ const addTransferServer = (body) => {
         // if status is ok
         if (xhr.status === 200) {
           dom('message').innerHTML = 'Success. Transfer is saved.';
-          resolve();
+          resolve({
+            status: this.status,
+            statusText: xhr.statusText,
+          });
           // if status is not ok
           // display error message and the response from server
         } else {

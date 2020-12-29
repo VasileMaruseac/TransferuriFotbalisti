@@ -4,6 +4,10 @@ td {
   border: 1px solid black;
 }
 
+body {
+  background-color: lightblue;
+}
+
 #home {
   border: none;
   color: white;
