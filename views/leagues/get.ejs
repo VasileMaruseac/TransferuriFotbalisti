@@ -16,17 +16,15 @@
         <br />
         <h2>Echipe</h2>
 
-        <% for ( var i = 0; i< l.length; i++){ %> <% var linkToOneTeam =
-        "/echipe/get/" + l[i].dataValues.idEchipa;%>
+        <% for ( var i = 0; i< s.echipe.length; i++){ %> <% var linkToOneTeam =
+        "/echipe/get/" + s.echipe[i].idEchipa;%>
         <div class="row">
           <div class="col"></div>
 
           <div class="col-6">
-            <a href="<%- linkToOneTeam%>"><%- l[i].dataValues.nume %></a>
-            <% const deleteString = "/echipe/delete/" +l[i].dataValues.idEchipa;
-            %>
+            <a href="<%- linkToOneTeam%>"><%- s.echipe[i].nume %></a>
+            <% const deleteString = "/echipe/delete/" +s.echipe[i].idEchipa; %>
             <a href="<%- deleteString%>" data-method="delete">Sterge</a>
-            <!-- <button onclick="<% deleteString%>"> Sterge</button> -->
           </div>
           <div class="col"></div>
         </div>
