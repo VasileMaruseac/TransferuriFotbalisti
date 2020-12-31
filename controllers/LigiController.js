@@ -61,6 +61,11 @@ exports.updateLeague = async (req, res) => {
   }
 };
 
-// exports.deleteLeague = async (req, res) => {
-
-// }
+exports.deleteLeague = async (req, res) => {
+  const result = await bllLigi.deleteLiga(req.params.id);
+  if (result === 'success') {
+    res.redirect(`/leagues/getAll`);
+  } else {
+    res.status(400).send(result);
+  }
+};

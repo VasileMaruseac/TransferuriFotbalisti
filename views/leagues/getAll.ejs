@@ -9,6 +9,9 @@
 
       <div class="col-6">
         <a href="<%- linkToOneLeague%>"><h2><%- s[i].dataValues.nume %></h2></a>
+        <% const deleteString = "/leagues/delete/" +s[i].dataValues.idLiga; %>
+        <a href="<%- deleteString%>" data-method="delete">Sterge</a>
+        <br /><br />
       </div>
       <div class="col"></div>
     </div>

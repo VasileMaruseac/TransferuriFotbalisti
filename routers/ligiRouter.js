@@ -38,4 +38,12 @@ router.post('/updateLiga/:id', async (req, res) => {
   }
 });
 
+router.delete('/deleteLiga/:id', async (req, res) => {
+  const result = await bllLigi.deleteLiga(req.params.id);
+  if (result === 'success') {
+    res.send('Deleted');
+  } else {
+    res.status(400).send(result);
+  }
+});
 module.exports = router;

@@ -15,4 +15,6 @@ router.get('/leagues/update/:id', controller.renderUpdateLeague);
 
 router.post('/leagues/update/:id', controller.updateLeague);
 
+router.get('/leagues/delete/:id', controller.deleteLeague);
+
 module.exports = router;

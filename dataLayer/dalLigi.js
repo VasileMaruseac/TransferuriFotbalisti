@@ -31,7 +31,13 @@ const addLeague = async (body) => {
 
 const getAllLeagues = async () => {
   try {
-    leagues = await ligi.findAll();
+    const result = await ligi.findAll();
+    const leagues = [];
+    for (let i = 0; i < result.length; i++) {
+      if (!result[i].dataValues.deleted) {
+        leagues.push(result[i]);
+      }
+    }
     return leagues;
   } catch (err) {
     return 'error';

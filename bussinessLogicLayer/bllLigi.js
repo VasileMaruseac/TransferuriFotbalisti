@@ -92,9 +92,25 @@ const updateLiga = async (id, body) => {
   return 'success';
 };
 
+const deleteLiga = async (id) => {
+  const liga = await dalLigi.getLigaById(id);
+  if (typeof liga === 'string') {
+    return 'not exists';
+  }
+  liga.deleted = true;
+  const resultUpdate = await dalLigi.updateLiga(id, liga);
+  if (resultUpdate !== 'updated') {
+    return resultUpdate;
+  }
+
+  myCache.del(['allLeagues', `league_${id}`]);
+  return 'success';
+};
+
 module.exports = {
   addLiga,
   getLigi,
   getLigaById,
   updateLiga,
+  deleteLiga,
 };

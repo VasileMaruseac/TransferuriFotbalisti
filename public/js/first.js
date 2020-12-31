@@ -64,15 +64,24 @@ const addLeagueServer = (body) => {
 allLeaguesLoad = async () => {
   data = await getAllLeagues();
   if (data.status == 200) {
-    let ul = dom('leagues');
+    let table = dom('leagues');
     const leagues = [...data.leagues];
     for (let i = 0; i < leagues.length; i++) {
-      let li = document.createElement('li');
+      let tr = document.createElement('tr');
+      let td = document.createElement('td');
       let a = document.createElement('a');
       a.href = '../html/leagueInfo.html?id=' + leagues[i].idLiga;
       a.innerHTML = leagues[i].nume;
-      li.appendChild(a);
-      ul.appendChild(li);
+      const tdDelete = document.createElement('input');
+      tdDelete.type = 'button';
+      tdDelete.value = 'Delete';
+      tdDelete.addEventListener('click', function () {
+        deleteLiga(leagues[i].idLiga);
+      });
+      td.appendChild(a);
+      tr.appendChild(td);
+      tr.appendChild(tdDelete);
+      table.appendChild(tr);
     }
   } else {
     alert('No reports');
@@ -242,6 +251,41 @@ const updateLeagueServer = (body, id) => {
 };
 //#endregion
 
+//#region delete Liga
+const deleteLiga = async (id) => {
+  await deleteLigaServer(id);
+  window.location.href = '../html/leaguesList.html';
+};
+
+const deleteLigaServer = (id) => {
+  return new Promise(function (resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('DELETE', '/deleteLiga/' + id);
+    xhr.onload = function () {
+      if (xhr.status == 200) {
+        resolve({
+          status: this.status,
+          statusText: xhr.statusText,
+        });
+      } else {
+        resolve({
+          status: this.status,
+          statusText: xhr.statusText,
+        });
+      }
+    };
+    xhr.onerror = function () {
+      reject({
+        status: this.status,
+        statusText: xhr.statusText,
+      });
+    };
+    xhr.send();
+  });
+};
+//#endregion
+//#endregion
+
 //#region jucatori
 //#region allPlayers
 allPlayersLoad = async () => {
@@ -398,7 +442,6 @@ const updateJucator = async () => {
 
   const e = dom('echipe');
   const idEchipa = parseInt(e.options[e.selectedIndex].id);
-  console.log(idEchipa, typeof idEchipa, !idEchipa);
   const nume = dom('nume').value;
   const nationalitate = dom('nationalitate').value;
   const dataNastere = new Date(dom('dataNastere').value).getTime();
