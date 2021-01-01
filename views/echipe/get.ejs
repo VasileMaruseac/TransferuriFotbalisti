@@ -9,8 +9,25 @@
         <h2><%- title %></h2>
         <h2>Id: <%- s.idEchipa %></h2>
         <h2>Nume: <%- s.nume %></h2>
-        <h2>Liga: <%- s.idLiga %></h2>
+        <h2>Liga: <%- s.numeLiga %></h2>
         <h2>Buget: <%- s.buget %></h2>
+
+        <br />
+        <h2>Jucatori</h2>
+        <% for ( var i = 0; i< s.jucatori.length; i++){ %> <% var
+        linkToOnePlayer = "/jucatori/get/" + s.jucatori[i].idJucator;%>
+        <div class="row">
+          <div class="col"></div>
+
+          <div class="col-6">
+            <a href="<%- linkToOnePlayer%>"><%- s.jucatori[i].nume %></a>
+            <% const deleteString = "/jucatori/delete/"
+            +s.jucatori[i].idJucator; %>
+            <a href="<%- deleteString%>" data-method="delete">Sterge</a>
+          </div>
+          <div class="col"></div>
+        </div>
+        <% } %>
       </div>
       <div class="col"></div>
     </div>

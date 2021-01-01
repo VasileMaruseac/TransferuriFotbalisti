@@ -1,8 +1,6 @@
-const express = require('express');
-const {model} = require('mongoose');
-const router = express.Router();
 var Sequelize = require('sequelize');
 var initModels = require('../models/init-models').initModels;
+const bllEchipe = require('../bussinessLogicLayer/bllEchipe');
 
 const mysql = {
   dbname: 'proiectppaw',
@@ -45,27 +43,38 @@ exports.addEchipa = async (req, res) => {
 
 exports.renderGetEchipa = async (req, res) => {
   try {
-    const s = await echipe.findAll({where: {idEchipa: req.params.id}});
-    if (s[0]) {
-      //get liga
-      const l = await ligi.findAll({where: {idLiga: s[0].dataValues.idLiga}});
-      if (l[0]) {
-        s[0].dataValues.idLiga = l[0].dataValues.nume;
-        res.render('echipe/get', {title: 'Echipa', s: s[0].dataValues});
-      } else {
-        res.redirect('http://localhost:3000');
-      }
+    const s = await bllEchipe.getEchipaById(req.params.id);
+    if (s) {
+      res.render('echipe/get', {title: 'Team', s: s});
     } else {
       res.redirect('http://localhost:3000');
     }
   } catch (err) {
     res.send(err.message);
   }
+
+  // try {
+  //   const s = await echipe.findAll({where: {idEchipa: req.params.id}});
+  //   if (s[0]) {
+  //     //get liga
+  //     const l = await ligi.findAll({where: {idLiga: s[0].dataValues.idLiga}});
+  //     if (l[0]) {
+  //       s[0].dataValues.idLiga = l[0].dataValues.nume;
+  //       res.render('echipe/get', {title: 'Echipa', s: s[0].dataValues});
+  //     } else {
+  //       res.redirect('http://localhost:3000');
+  //     }
+  //   } else {
+  //     res.redirect('http://localhost:3000');
+  //   }
+  // } catch (err) {
+  //   res.send(err.message);
+  // }
 };
 
 exports.renderGetAllEchipe = async (req, res) => {
   try {
-    const s = await echipe.findAll();
+    const s = await bllEchipe.getAllTeams();
     res.render('echipe/getAll', {title: 'Teams list', s: s});
   } catch (err) {
     res.send(err.message);

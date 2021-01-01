@@ -19,7 +19,7 @@ exports.addLeague = async (req, res) => {
 
 exports.renderGetLeague = async (req, res) => {
   try {
-    const s = await await bllLigi.getLigaById(req.params.id);
+    const s = await bllLigi.getLigaById(req.params.id);
     if (s) {
       res.render('leagues/get', {title: 'League', s: s});
     } else {

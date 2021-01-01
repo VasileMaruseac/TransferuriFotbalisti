@@ -286,6 +286,359 @@ const deleteLigaServer = (id) => {
 //#endregion
 //#endregion
 
+//#region echipe
+// //#region addLeague
+// const addLeague = async () => {
+//   const nume = dom('nume').value;
+//   const tara = dom('tara').value;
+//   body = {
+//     nume,
+//     tara,
+//   };
+
+//   const result = await addLeagueServer(body);
+//   if (result.status === 200) {
+//     window.location.href = '../html/leaguesList.html';
+//   }
+// };
+
+// const addLeagueServer = (body) => {
+//   return new Promise(function (resolve, reject) {
+//     let xhr = new XMLHttpRequest();
+//     xhr.open('POST', '/createLiga');
+//     // the request will send json, UTF8 data
+//     xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+//     xhr.onload = function () {
+//       resolve({
+//         status: this.status,
+//         statusText: xhr.statusText,
+//       });
+//     };
+//     xhr.onerror = function () {
+//       reject({
+//         status: this.status,
+//         statusText: xhr.statusText,
+//       });
+//     };
+//     // transmit the object converted to JSON
+//     xhr.send(JSON.stringify(body));
+//     // every time when a change in HTTP request status occures
+//     xhr.onreadystatechange = function () {
+//       // if HTTP request is DONE
+//       if (xhr.readyState === 4) {
+//         // if status is ok
+//         if (xhr.status === 200) {
+//           dom('message').innerHTML = 'Success. League is saved.';
+//           resolve({
+//             status: this.status,
+//             statusText: xhr.statusText,
+//           });
+//           // if status is not ok
+//           // display error message and the response from server
+//         } else {
+//           dom('message').innerHTML =
+//             'Error. League is not saved. ' + xhr.responseText;
+//         }
+//       }
+//     };
+//   });
+// };
+// //#endregion
+
+//#region allTeams
+const allTeamsLoad = async () => {
+  data = await getAllTeams();
+  if (data.status == 200) {
+    let table = dom('teams');
+    const teams = [...data.teams];
+    for (let i = 0; i < teams.length; i++) {
+      let tr = document.createElement('tr');
+      let td = document.createElement('td');
+      let a = document.createElement('a');
+      a.href = '../html/echipaInfo.html?id=' + teams[i].idEchipa;
+      a.innerHTML = teams[i].nume;
+      const tdDelete = document.createElement('input');
+      tdDelete.type = 'button';
+      tdDelete.value = 'Delete';
+      tdDelete.addEventListener('click', function () {
+        deleteEchipa(teams[i].idEchipa);
+      });
+      td.appendChild(a);
+      tr.appendChild(td);
+      tr.appendChild(tdDelete);
+      table.appendChild(tr);
+    }
+  } else {
+    alert('No teams');
+  }
+};
+
+const getAllTeams = () => {
+  return new Promise(function (resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/getEchipe');
+    xhr.onload = function () {
+      if (xhr.status == 200) {
+        resolve({
+          status: this.status,
+          statusText: xhr.statusText,
+          teams: JSON.parse(xhr.response),
+        });
+      } else {
+        resolve({
+          status: this.status,
+          statusText: xhr.statusText,
+        });
+      }
+    };
+    xhr.onerror = function () {
+      reject({
+        status: this.status,
+        statusText: xhr.statusText,
+      });
+    };
+    xhr.send();
+  });
+};
+//#endregion
+
+//#region getOneTeam
+const oneTeamLoad = async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const id = urlParams.get('id');
+  data = await getOneTeam(id);
+  if (data.status == 200) {
+    const team = data.team;
+    console.log(team);
+    const nume = dom('nume');
+    nume.innerHTML += team.nume;
+    const liga = dom('liga');
+    liga.innerHTML += team.numeLiga;
+    const buget = dom('buget');
+    buget.innerHTML += team.buget;
+    tableJucatori = dom('jucatori');
+    team.jucatori.forEach((jucator) => {
+      const tr = document.createElement('tr');
+      const tdNume = document.createElement('td');
+      let link = document.createElement('a');
+      link.href = '../html/jucatorInfo.html?id=' + jucator.idJucator;
+      link.innerHTML = jucator.nume;
+      tdNume.appendChild(link);
+      let tdDelete = document.createElement('input');
+      tdDelete.type = 'button';
+      tdDelete.value = 'Delete';
+      tdDelete.addEventListener('click', function () {
+        deleteJucator(echipa.idEchipa);
+      });
+      tr.appendChild(tdNume);
+      tr.appendChild(tdDelete);
+      tableJucatori.appendChild(tr);
+    });
+    const linkUpdate = dom('link');
+    linkUpdate.href += id;
+  } else {
+    alert('No team');
+  }
+};
+
+const getOneTeam = (id) => {
+  return new Promise(function (resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/getEchipa/' + id);
+    xhr.onload = function () {
+      if (xhr.status == 200) {
+        resolve({
+          status: this.status,
+          statusText: xhr.statusText,
+          team: JSON.parse(xhr.response),
+        });
+      } else {
+        resolve({
+          status: this.status,
+          statusText: xhr.statusText,
+        });
+      }
+    };
+    xhr.onerror = function () {
+      reject({
+        status: this.status,
+        statusText: xhr.statusText,
+      });
+    };
+    xhr.send();
+  });
+};
+//#endregion
+
+// //#region getOneLeague
+// const oneLeagueLoad = async () => {
+//   const urlParams = new URLSearchParams(window.location.search);
+//   const id = urlParams.get('id');
+//   data = await getOneLeague(id);
+//   if (data.status == 200) {
+//     const league = data.league;
+//     const nume = dom('nume');
+//     nume.innerHTML += league.nume;
+//     const tara = dom('tara');
+//     tara.innerHTML += league.tara;
+//     tableEchipe = dom('echipe');
+//     league.echipe.forEach((echipa) => {
+//       const tr = document.createElement('tr');
+//       const tdNume = document.createElement('td');
+//       let link = document.createElement('a');
+//       link.href = '../html/echipaInfo.html?id=' + echipa.idEchipa;
+//       link.innerHTML = echipa.nume;
+//       tdNume.appendChild(link);
+
+//       let tdDelete = document.createElement('input');
+//       tdDelete.type = 'button';
+//       tdDelete.value = 'Delete';
+//       tdDelete.addEventListener('click', function () {
+//         deleteEchipa(echipa.idEchipa);
+//       });
+
+//       tr.appendChild(tdNume);
+//       tr.appendChild(tdDelete);
+//       tableEchipe.appendChild(tr);
+//     });
+//     const linkUpdate = dom('link');
+//     linkUpdate.href += id;
+//   } else {
+//     alert('No league');
+//   }
+// };
+
+// const getOneLeague = (id) => {
+//   return new Promise(function (resolve, reject) {
+//     var xhr = new XMLHttpRequest();
+//     xhr.open('GET', '/getLiga/' + id);
+//     xhr.onload = function () {
+//       if (xhr.status == 200) {
+//         resolve({
+//           status: this.status,
+//           statusText: xhr.statusText,
+//           league: JSON.parse(xhr.response),
+//         });
+//       } else {
+//         resolve({
+//           status: this.status,
+//           statusText: xhr.statusText,
+//         });
+//       }
+//     };
+//     xhr.onerror = function () {
+//       reject({
+//         status: this.status,
+//         statusText: xhr.statusText,
+//       });
+//     };
+//     xhr.send();
+//   });
+// };
+
+// //#endregion
+
+// //#region updateLeague
+// const populateInputsUpdateLeague = async () => {
+//   const urlParams = new URLSearchParams(window.location.search);
+//   const id = urlParams.get('id');
+//   let league = (await getOneLeague(id)).league;
+
+//   const nume = dom('nume');
+//   nume.value = league.nume;
+//   const tara = dom('tara');
+//   tara.value = league.tara;
+// };
+
+// const updateLeague = async () => {
+//   const urlParams = new URLSearchParams(window.location.search);
+//   const idLiga = parseInt(urlParams.get('id'));
+
+//   const nume = dom('nume').value;
+//   const tara = dom('tara').value;
+
+//   body = {
+//     nume,
+//     tara,
+//   };
+//   await updateLeagueServer(body, idLiga);
+//   window.location.href = '../html/leagueInfo.html?id=' + idLiga;
+// };
+
+// const updateLeagueServer = (body, id) => {
+//   return new Promise(function (resolve, reject) {
+//     let xhr = new XMLHttpRequest();
+//     xhr.open('POST', '/updateLiga/' + id);
+//     // the request will send json, UTF8 data
+//     xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+//     xhr.onload = function () {
+//       resolve({
+//         status: this.status,
+//         statusText: xhr.statusText,
+//       });
+//     };
+//     xhr.onerror = function () {
+//       reject({
+//         status: this.status,
+//         statusText: xhr.statusText,
+//       });
+//     };
+//     // transmit the object converted to JSON
+//     xhr.send(JSON.stringify(body));
+//     // every time when a change in HTTP request status occures
+//     xhr.onreadystatechange = function () {
+//       // if HTTP request is DONE
+//       if (xhr.readyState === 4) {
+//         // if status is ok
+//         if (xhr.status === 200) {
+//           dom('message').innerHTML = 'Success. Liga actualizata.';
+//           resolve();
+//           // if status is not ok
+//           // display error message and the response from server
+//         } else {
+//           dom('message').innerHTML = 'Error. ' + xhr.responseText;
+//         }
+//       }
+//     };
+//   });
+// };
+// //#endregion
+
+//#region delete Echipa
+const deleteEchipa = async (id) => {
+  //   await deleteLigaServer(id);
+  //   window.location.href = '../html/leaguesList.html';
+};
+
+// const deleteLigaServer = (id) => {
+//   return new Promise(function (resolve, reject) {
+//     var xhr = new XMLHttpRequest();
+//     xhr.open('DELETE', '/deleteLiga/' + id);
+//     xhr.onload = function () {
+//       if (xhr.status == 200) {
+//         resolve({
+//           status: this.status,
+//           statusText: xhr.statusText,
+//         });
+//       } else {
+//         resolve({
+//           status: this.status,
+//           statusText: xhr.statusText,
+//         });
+//       }
+//     };
+//     xhr.onerror = function () {
+//       reject({
+//         status: this.status,
+//         statusText: xhr.statusText,
+//       });
+//     };
+//     xhr.send();
+//   });
+// };
+//#endregion
+//#endregion
+
 //#region jucatori
 //#region allPlayers
 allPlayersLoad = async () => {
@@ -724,88 +1077,5 @@ const deleteTransferServer = (id) => {
   });
 };
 //#endregion
-//#endregion
-
-//#region teams
-//#region allTeams
-// allTeamsLoad = async () => {
-//   data = await getAllPlayers();
-//   if (data.status == 200) {
-//     let ul = dom('players');
-//     const players = [...data.players];
-//     for (let i = 0; i < players.length; i++) {
-//       let li = document.createElement('li');
-//       let a = document.createElement('a');
-//       a.href = '../html/jucatorInfo.html?id=' + players[i].idJucator;
-//       a.innerHTML = players[i].nume;
-//       li.appendChild(a);
-//       ul.appendChild(li);
-//     }
-//   } else {
-//     alert('No reports');
-//   }
-// };
-
-getAllTeams = () => {
-  return new Promise(function (resolve, reject) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', '/getEchipe');
-    xhr.onload = function () {
-      if (xhr.status == 200) {
-        resolve({
-          status: this.status,
-          statusText: xhr.statusText,
-          teams: JSON.parse(xhr.response),
-        });
-      } else {
-        resolve({
-          status: this.status,
-          statusText: xhr.statusText,
-        });
-      }
-    };
-    xhr.onerror = function () {
-      reject({
-        status: this.status,
-        statusText: xhr.statusText,
-      });
-    };
-    xhr.send();
-  });
-};
-//#endregion
-
-//#region getOneTeam
-const getOneTeam = (id) => {
-  return new Promise(function (resolve, reject) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', '/getEchipa/' + id);
-    xhr.onload = function () {
-      if (xhr.status == 200) {
-        resolve({
-          status: this.status,
-          statusText: xhr.statusText,
-          player: JSON.parse(xhr.response)[0],
-        });
-      } else {
-        resolve({
-          status: this.status,
-          statusText: xhr.statusText,
-        });
-      }
-    };
-    xhr.onerror = function () {
-      reject({
-        status: this.status,
-        statusText: xhr.statusText,
-      });
-    };
-    xhr.send();
-  });
-};
-//#endregion
-
-//#region delete team
-const deleteEchipa = (id) => {};
 //#endregion
 //#endregion

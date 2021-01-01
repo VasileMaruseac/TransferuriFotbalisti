@@ -16,6 +16,16 @@ const sequelize = new Sequelize(
 
 const models = initModels(sequelize);
 
+const getJucatoriByTeamId = async (id) => {
+  const jucatori = await models.jucatori;
+  const s = await jucatori.findAll({where: {idEchipa: id}});
+  if (s[0]) {
+    return s;
+  } else {
+    return 'notFound';
+  }
+};
+
 const getJucatorById = async (id) => {
   const jucatori = await models.jucatori;
   const s = await jucatori.findAll({where: {idJucator: id}});
@@ -38,6 +48,7 @@ const updateJucator = async (id, body) => {
 };
 
 module.exports = {
+  getJucatoriByTeamId,
   getJucatorById,
   updateJucator,
 };
