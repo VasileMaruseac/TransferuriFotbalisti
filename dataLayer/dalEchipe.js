@@ -17,6 +17,17 @@ const sequelize = new Sequelize(
 const models = initModels(sequelize);
 var echipe = models.echipe;
 
+const addTeam = async (body) => {
+  body.deleted = false;
+  try {
+    await echipe.create(body);
+    return 'created';
+  } catch (err) {
+    console.log(err);
+    return err.message;
+  }
+};
+
 const getAllEchipe = async () => {
   try {
     const result = await echipe.findAll();
@@ -34,6 +45,15 @@ const getAllEchipe = async () => {
 
 const getEchipaById = async (id) => {
   const s = await echipe.findAll({where: {idEchipa: id}});
+  if (s[0]) {
+    return s[0].dataValues;
+  } else {
+    return 'notFound';
+  }
+};
+
+const getEchipaByName = async (nume) => {
+  const s = await echipe.findAll({where: {nume}});
   if (s[0]) {
     return s[0].dataValues;
   } else {
@@ -61,6 +81,8 @@ const updateEchipa = async (idEchipa, body) => {
 };
 
 module.exports = {
+  addTeam,
+  getEchipaByName,
   getAllEchipe,
   getEchipaById,
   getEchipeByLeagueId,

@@ -52,24 +52,6 @@ exports.renderGetEchipa = async (req, res) => {
   } catch (err) {
     res.send(err.message);
   }
-
-  // try {
-  //   const s = await echipe.findAll({where: {idEchipa: req.params.id}});
-  //   if (s[0]) {
-  //     //get liga
-  //     const l = await ligi.findAll({where: {idLiga: s[0].dataValues.idLiga}});
-  //     if (l[0]) {
-  //       s[0].dataValues.idLiga = l[0].dataValues.nume;
-  //       res.render('echipe/get', {title: 'Echipa', s: s[0].dataValues});
-  //     } else {
-  //       res.redirect('http://localhost:3000');
-  //     }
-  //   } else {
-  //     res.redirect('http://localhost:3000');
-  //   }
-  // } catch (err) {
-  //   res.send(err.message);
-  // }
 };
 
 exports.renderGetAllEchipe = async (req, res) => {

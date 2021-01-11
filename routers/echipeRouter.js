@@ -2,14 +2,14 @@ const express = require('express');
 const router = express.Router();
 const bllEchipe = require('../bussinessLogicLayer/bllEchipe');
 
-// router.post('/createLiga', async (req, res) => {
-//     try {
-//       const s = await ligi.create(req.body).catch('err');
-//       res.send('Created');
-//     } catch (err) {
-//       res.send(err.message);
-//     }
-//   });
+router.post('/createEchipa', async (req, res) => {
+  const result = await bllEchipe.addEchipa(req.body);
+  if (result === 'success') {
+    res.send('Created');
+  } else {
+    res.status(400).send(result);
+  }
+});
 
 router.get('/getEchipe', async (req, res) => {
   const result = await bllEchipe.getAllTeams();

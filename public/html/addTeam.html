@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Adauga echipa</title>
+    <!-- <link rel="icon" href="../img/logo.svg"> -->
+    <link rel="stylesheet" href="../css/first.css" />
+    <script src="../js/first.js"></script>
+  </head>
+
+  <body onload="populateTeamsDropdown()">
+    <button id="home"><a href="../index.html">Home</a></button>
+    <h2>Adauga echipa</h2>
+    <span class="input-group-text" id="basic-addon1">Nume:</span>
+    <input type="text" id="nume" class="form-control" /><br />
+    <span class="input-group-text" id="basic-addon1">Liga: </span>
+    <select name="idLiga" id="ligi">
+      <option id="0"></option>
+    </select>
+    <br />
+    <span class="input-group-text" id="basic-addon1">Buget: </span>
+    <input type="text" id="buget" class="form-control" /><br />
+    <br />
+
+    <br /><button onclick="addTeam()">Adauga</button>
+    <span class="input-group-text" id="message"></span>
+  </body>
+</html>
