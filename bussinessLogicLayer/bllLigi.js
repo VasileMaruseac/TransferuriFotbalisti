@@ -2,7 +2,6 @@ const NodeCache = require('node-cache');
 const myCache = new NodeCache();
 const dalLigi = require('../dataLayer/dalLigi');
 const dalEchipe = require('../dataLayer/dalEchipe');
-const echipe = require('../models/echipe');
 
 const addLiga = async (body) => {
   if (!body.nume.trim().length || !body.tara.trim().length) {
@@ -58,7 +57,7 @@ const getLigaById = async (id) => {
   }
 
   result = await dalLigi.getLigaById(id);
-  echipe = await dalEchipe.getEchipeByLeagueId(id);
+  const echipe = await dalEchipe.getEchipeByLeagueId(id);
   result.echipe = [];
   for (let i = 0; i < echipe.length; i++) {
     if (!echipe[i].dataValues.deleted) {

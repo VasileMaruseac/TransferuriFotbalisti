@@ -29,15 +29,18 @@ router.get('/getEchipa/:id', async (req, res) => {
   }
 });
 
-//   router.post('/updateLiga/:id', async (req, res) => {
-//     try {
-//       const s = await ligi
-//         .update(req.body, {where: {idLiga: req.params.id}})
-//         .catch('err');
-//       res.send('Updated');
-//     } catch (err) {
-//       res.send(err.message);
-//     }
-//   });
+router.post('/updateEchipa/:id', async (req, res) => {
+  console.log('AICI');
+  try {
+    const result = await bllEchipe.updateEchipa(req.params.id, req.body);
+    if (result === 'success') {
+      res.send('Updated');
+    } else {
+      res.status(400).send(result);
+    }
+  } catch (err) {
+    res.send(err.message);
+  }
+});
 
 module.exports = router;

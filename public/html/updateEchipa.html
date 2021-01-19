@@ -3,31 +3,28 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lista jucatorilor</title>
+    <title>Editeaza echipa</title>
     <!-- <link rel="icon" href="../img/logo.svg"> -->
     <link rel="stylesheet" href="../css/first.css" />
     <script src="../js/first.js"></script>
   </head>
 
-  <body>
-    <!-- <body onload="populateInputsUpdateJucator()"> -->
-    <!-- <button id="home"><a href="../index.html">Home</a></button>
-    <h2>Editeaza jucator</h2>
+  <body onload="populateInputsUpdateEchipa()">
+    <button id="home"><a href="../index.html">Home</a></button>
+    <h2>Editeaza echipa</h2>
+
     <span class="input-group-text" id="basic-addon1">Nume:</span>
-    <input type="text" id="nume" class="form-control" />
-    <br /><span class="input-group-text" id="basic-addon1">Nationalitate:</span>
-    <input type="text" id="nationalitate" class="form-control" />
-    <br /><span class="input-group-text" id="basic-addon1">Data nastere:</span>
-    <input type="date" id="dataNastere" class="form-control" />
-    <br /><span class="input-group-text" id="basic-addon1">Echipa:</span>
-    <select name="idEchipa" id="echipe">
+    <input type="text" id="nume" class="form-control" /><br />
+    <span class="input-group-text" id="basic-addon1">Liga: </span>
+    <select name="idLiga" id="ligi">
       <option id="0"></option>
     </select>
-    <br /><span class="input-group-text" id="basic-addon1">Valoare:</span>
-    <input type="text" id="valoare" class="form-control" />
+    <br />
+    <span class="input-group-text" id="basic-addon1">Buget: </span>
+    <input type="text" id="buget" class="form-control" /><br />
+    <br />
 
-    <br /><br />
-    <button onclick="updateJucator()">Editeaza</button>
-    <div id="message"></div> -->
+    <br /><button onclick="updateTeam()">Editeaza</button>
+    <span class="input-group-text" id="message"></span>
   </body>
 </html>

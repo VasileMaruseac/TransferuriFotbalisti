@@ -70,11 +70,13 @@ const getEchipaById = async (id) => {
   result = await dalEchipe.getEchipaById(id);
   liga = await dalLigi.getLigaById(result.idLiga);
   result.numeLiga = liga.nume;
-  jucatori = await dalJucatori.getJucatoriByTeamId(id);
+  const jucatori = await dalJucatori.getJucatoriByTeamId(id);
   result.jucatori = [];
-  for (let i = 0; i < jucatori.length; i++) {
-    if (!jucatori[i].dataValues.deleted) {
-      result.jucatori.push(jucatori[i].dataValues);
+  if (typeof jucatori !== 'string') {
+    for (let i = 0; i < jucatori.length; i++) {
+      if (!jucatori[i].dataValues.deleted) {
+        result.jucatori.push(jucatori[i].dataValues);
+      }
     }
   }
   myCache.set(`team_${id}`, result);
@@ -82,8 +84,36 @@ const getEchipaById = async (id) => {
   return result;
 };
 
+const updateEchipa = async (id, body) => {
+  if (!body.nume.trim().length || isNaN(body.buget) || body.buget <= 0) {
+    return 'validation error';
+  }
+  const echipa = await dalEchipe.getEchipaById(id);
+  if (typeof echipa === 'string') {
+    return 'not exists';
+  }
+  if (echipa.nume != body.nume) {
+    const teamResult = await dalEchipe.getEchipaByName(body.nume);
+    if (typeof teamResult !== 'string') {
+      return 'exista deja o echipa cu acest nume';
+    }
+  }
+  const resultUpdate = await dalEchipe.updateEchipa(id, body);
+  if (resultUpdate !== 'updated') {
+    return resultUpdate;
+  }
+  myCache.del([
+    'allTeams',
+    `team_${id}`,
+    `league_${echipa.idLiga}`,
+    `league_${body.idLiga}`,
+  ]);
+  return 'success';
+};
+
 module.exports = {
   addEchipa,
   getAllTeams,
   getEchipaById,
+  updateEchipa,
 };

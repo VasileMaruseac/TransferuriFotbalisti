@@ -88,7 +88,7 @@ allLeaguesLoad = async () => {
   }
 };
 
-getAllLeagues = () => {
+const getAllLeagues = () => {
   return new Promise(function (resolve, reject) {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', '/getLigi');
@@ -485,6 +485,89 @@ const getOneTeam = (id) => {
       });
     };
     xhr.send();
+  });
+};
+//#endregion
+
+//#region edit team
+const populateInputsUpdateEchipa = async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const id = urlParams.get('id');
+  let echipa = (await getOneTeam(id)).team;
+  const ligi = (await getAllLeagues()).leagues;
+  let dropdownLigi = dom('ligi');
+  for (let i = 0; i < ligi.length; i++) {
+    let option = document.createElement('option');
+    option.id = ligi[i].idLiga;
+    option.innerHTML = ligi[i].nume;
+    if (ligi[i].idLiga === echipa.idLiga) {
+      option.selected = true;
+    }
+    dropdownLigi.appendChild(option);
+  }
+  const nume = dom('nume');
+  nume.value = echipa.nume;
+  const buget = dom('buget');
+  buget.value = echipa.buget;
+};
+
+const updateTeam = async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const idEchipa = parseInt(urlParams.get('id'));
+
+  const e = dom('ligi');
+  const idLiga = parseInt(e.options[e.selectedIndex].id);
+  const nume = dom('nume').value;
+  const buget = dom('buget').value;
+  if (!nume.length || idLiga === 0 || isNaN(buget) || buget <= 0) {
+    alert('Something wrong');
+    window.location.href = '../html/updateEchipa.html?id=' + idEchipa;
+  } else {
+    body = {
+      nume,
+      idLiga,
+      buget,
+    };
+    await updateEchipaServer(body, idEchipa);
+    window.location.href = '../html/echipaInfo.html?id=' + idEchipa;
+  }
+};
+
+const updateEchipaServer = (body, id) => {
+  return new Promise(function (resolve, reject) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', '/updateEchipa/' + id);
+    // the request will send json, UTF8 data
+    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+    xhr.onload = function () {
+      resolve({
+        status: this.status,
+        statusText: xhr.statusText,
+      });
+    };
+    xhr.onerror = function () {
+      reject({
+        status: this.status,
+        statusText: xhr.statusText,
+      });
+    };
+    // transmit the object converted to JSON
+    xhr.send(JSON.stringify(body));
+    // every time when a change in HTTP request status occures
+    xhr.onreadystatechange = function () {
+      // if HTTP request is DONE
+      if (xhr.readyState === 4) {
+        // if status is ok
+        if (xhr.status === 200) {
+          dom('message').innerHTML = 'Success. Echipa actualizata.';
+          resolve();
+          // if status is not ok
+          // display error message and the response from server
+        } else {
+          dom('message').innerHTML = 'Error. ' + xhr.responseText;
+        }
+      }
+    };
   });
 };
 //#endregion
