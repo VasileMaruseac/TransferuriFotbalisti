@@ -1,26 +1,9 @@
-var Sequelize = require('sequelize');
-var initModels = require('../models/init-models').initModels;
+const bllLigi = require('../bussinessLogicLayer/bllLigi');
 const bllEchipe = require('../bussinessLogicLayer/bllEchipe');
-
-const mysql = {
-  dbname: 'proiectppaw',
-  user: 'vasi',
-  pass: '@DminTest123!',
-  options: {dialect: 'mysql', port: 3306},
-};
-var sequelize = new Sequelize(
-  mysql.dbname,
-  mysql.user,
-  mysql.pass,
-  mysql.options
-);
-var models = initModels(sequelize);
-var echipe = models.echipe;
-var ligi = models.ligi;
 
 exports.renderAddEchipa = async (req, res) => {
   try {
-    const l = await ligi.findAll();
+    const l = await bllLigi.getLigi();
     res.render('echipe/add', {title: 'Add team', l: l});
   } catch (err) {
     res.send(err.message);
@@ -28,16 +11,11 @@ exports.renderAddEchipa = async (req, res) => {
 };
 
 exports.addEchipa = async (req, res) => {
-  try {
-    try {
-      const s = await echipe.create(req.body).catch('err');
-      res.redirect(`/echipe/getAll`);
-    } catch (err) {
-      console.log(err);
-      res.send(err.message);
-    }
-  } catch (err) {
-    res.send(err.message);
+  const result = await bllEchipe.addEchipa(req.body);
+  if (result === 'success') {
+    res.redirect(`/echipe/getAll`);
+  } else {
+    res.status(400).send(result);
   }
 };
 
@@ -65,10 +43,10 @@ exports.renderGetAllEchipe = async (req, res) => {
 
 exports.renderUpdateEchipa = async (req, res) => {
   try {
-    var s = await echipe.findAll({where: {idEchipa: req.params.id}});
-    const l = await ligi.findAll();
-    if (s[0]) {
-      res.render('echipe/update', {title: 'Echipa', s: s[0].dataValues, l: l});
+    const s = await bllEchipe.getEchipaById(req.params.id);
+    const l = await bllLigi.getLigi();
+    if (s) {
+      res.render('echipe/update', {title: 'Echipa', s: s, l: l});
     } else {
       res.redirect('http://localhost:3000');
     }
@@ -78,50 +56,19 @@ exports.renderUpdateEchipa = async (req, res) => {
 };
 
 exports.updateEchipa = async (req, res) => {
-  try {
-    try {
-      const s = await echipe
-        .update(req.body, {where: {idEchipa: req.params.id}})
-        .catch('err');
-      res.redirect(`/echipe/get/${req.params.id}`);
-    } catch (err) {
-      console.log(err);
-      res.send(err.message);
-    }
-  } catch (err) {
-    res.send(err.message);
+  const result = await bllEchipe.updateEchipa(req.params.id, req.body);
+  if (result === 'success') {
+    res.redirect(`/echipe/get/${req.params.id}`);
+  } else {
+    res.status(400).send(result);
   }
 };
 
 exports.deleteEchipa = async (req, res) => {
-  try {
-    try {
-      var s = await echipe.findAll({where: {idEchipa: req.params.id}});
-      let idLiga;
-      if (s[0]) {
-        idLiga = s[0].dataValues.idLiga;
-        //get liga
-        const l = await ligi.findAll({where: {idLiga: idLiga}});
-        if (l[0]) {
-          await l[0].update(
-            {lastUpdatedTime: new Date().getTime()},
-            {where: {idLiga: idLiga}}
-          );
-        }
-        await s[0].destroy();
-        if (idLiga) {
-          res.redirect('/leagues/get/' + idLiga);
-        } else {
-          res.redirect('/leagues/getAll');
-        }
-      } else {
-        res.redirect('http://localhost:3000');
-      }
-    } catch (err) {
-      console.log(err);
-      res.send(err.message);
-    }
-  } catch (err) {
-    res.send(err.message);
+  const result = await bllEchipe.deleteEchipa(req.params.id);
+  if (result === 'success') {
+    res.redirect(`/echipe/getAll`);
+  } else {
+    res.status(400).send(result);
   }
 };

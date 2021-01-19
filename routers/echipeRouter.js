@@ -30,7 +30,6 @@ router.get('/getEchipa/:id', async (req, res) => {
 });
 
 router.post('/updateEchipa/:id', async (req, res) => {
-  console.log('AICI');
   try {
     const result = await bllEchipe.updateEchipa(req.params.id, req.body);
     if (result === 'success') {
@@ -40,6 +39,15 @@ router.post('/updateEchipa/:id', async (req, res) => {
     }
   } catch (err) {
     res.send(err.message);
+  }
+});
+
+router.delete('/deleteEchipa/:id', async (req, res) => {
+  const result = await bllEchipe.deleteEchipa(req.params.id);
+  if (result === 'success') {
+    res.send('Deleted');
+  } else {
+    res.status(400).send(result);
   }
 });
 

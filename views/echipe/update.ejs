@@ -17,8 +17,12 @@
             />
             <span class="input-group-text" id="basic-addon1">Liga</span>
             <select name="idLiga" id="ligi">
-              <% for ( var i = 0; i< l.length; i++){ %>
-              <option value="<%- l[i].dataValues.idLiga %>">
+              <% for ( var i = 0; i< l.length; i++){ %> <% var selectedOption =
+              l[i].dataValues.idLiga == s.idLiga %>
+              <option
+                value="<%- l[i].dataValues.idLiga %>"
+                <%- selectedOption ? "selected" : "" %>
+              >
                 <%- l[i].dataValues.nume %>
               </option>
               <% } %>

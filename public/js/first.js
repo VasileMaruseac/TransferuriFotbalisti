@@ -290,7 +290,6 @@ const deleteLigaServer = (id) => {
 //#region addTeam
 const populateTeamsDropdown = async () => {
   const ligi = (await getAllLeagues()).leagues;
-  console.log(ligi);
   let dropdownLigi = dom('ligi');
   for (let i = 0; i < ligi.length; i++) {
     let option = document.createElement('option');
@@ -574,36 +573,36 @@ const updateEchipaServer = (body, id) => {
 
 //#region delete Echipa
 const deleteEchipa = async (id) => {
-  //   await deleteLigaServer(id);
-  //   window.location.href = '../html/leaguesList.html';
+  await deleteEchipaServer(id);
+  window.location.href = '../html/echipeList.html';
 };
 
-// const deleteLigaServer = (id) => {
-//   return new Promise(function (resolve, reject) {
-//     var xhr = new XMLHttpRequest();
-//     xhr.open('DELETE', '/deleteLiga/' + id);
-//     xhr.onload = function () {
-//       if (xhr.status == 200) {
-//         resolve({
-//           status: this.status,
-//           statusText: xhr.statusText,
-//         });
-//       } else {
-//         resolve({
-//           status: this.status,
-//           statusText: xhr.statusText,
-//         });
-//       }
-//     };
-//     xhr.onerror = function () {
-//       reject({
-//         status: this.status,
-//         statusText: xhr.statusText,
-//       });
-//     };
-//     xhr.send();
-//   });
-// };
+const deleteEchipaServer = (id) => {
+  return new Promise(function (resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('DELETE', '/deleteEchipa/' + id);
+    xhr.onload = function () {
+      if (xhr.status == 200) {
+        resolve({
+          status: this.status,
+          statusText: xhr.statusText,
+        });
+      } else {
+        resolve({
+          status: this.status,
+          statusText: xhr.statusText,
+        });
+      }
+    };
+    xhr.onerror = function () {
+      reject({
+        status: this.status,
+        statusText: xhr.statusText,
+      });
+    };
+    xhr.send();
+  });
+};
 //#endregion
 //#endregion
 

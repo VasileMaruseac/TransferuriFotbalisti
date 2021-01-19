@@ -24,7 +24,7 @@ const addEchipa = async (body) => {
     if (!teamResult.deleted) {
       return 'team exists';
     } else {
-      if (body.idLiga !== teamResult.idLiga) {
+      if (body.idLiga != teamResult.idLiga) {
         return 'different league';
       }
       // update echipa, deleted: false
@@ -43,7 +43,7 @@ const addEchipa = async (body) => {
       return addResult;
     }
   }
-  myCache.del('allTeams');
+  myCache.del('allTeams', `league_${body.idLiga}`);
   return 'success';
 };
 
@@ -111,9 +111,24 @@ const updateEchipa = async (id, body) => {
   return 'success';
 };
 
+const deleteEchipa = async (id) => {
+  const echipa = await dalEchipe.getEchipaById(id);
+  if (typeof echipa === 'string') {
+    return 'not exists';
+  }
+  echipa.deleted = true;
+  const resultUpdate = await dalEchipe.updateEchipa(id, echipa);
+  if (resultUpdate !== 'updated') {
+    return resultUpdate;
+  }
+  myCache.del(['allTeams', `team_${id}`, `league_${echipa.idLiga}`]);
+  return 'success';
+};
+
 module.exports = {
   addEchipa,
   getAllTeams,
   getEchipaById,
   updateEchipa,
+  deleteEchipa,
 };
