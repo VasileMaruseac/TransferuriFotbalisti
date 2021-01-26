@@ -16,6 +16,18 @@ const sequelize = new Sequelize(
 
 const models = initModels(sequelize);
 
+const addJucator = async (body) => {
+  const jucatori = await models.jucatori;
+  body.deleted = false;
+  try {
+    await jucatori.create(body);
+    return 'created';
+  } catch (err) {
+    console.log(err);
+    return err.message;
+  }
+};
+
 const getJucatoriByTeamId = async (id) => {
   const jucatori = await models.jucatori;
   const s = await jucatori.findAll({where: {idEchipa: id}});
@@ -36,6 +48,32 @@ const getJucatorById = async (id) => {
   }
 };
 
+const getAllJucatori = async () => {
+  const jucatori = await models.jucatori;
+  try {
+    const result = await jucatori.findAll();
+    const players = [];
+    for (let i = 0; i < result.length; i++) {
+      if (!result[i].dataValues.deleted) {
+        players.push(result[i]);
+      }
+    }
+    return players;
+  } catch (err) {
+    return 'error';
+  }
+};
+
+const getJucatorByName = async (nume) => {
+  const jucatori = await models.jucatori;
+  const s = await jucatori.findAll({where: {nume}});
+  if (s[0]) {
+    return s[0].dataValues;
+  } else {
+    return 'notFound';
+  }
+};
+
 const updateJucator = async (id, body) => {
   const jucatori = await models.jucatori;
   try {
@@ -48,7 +86,10 @@ const updateJucator = async (id, body) => {
 };
 
 module.exports = {
+  addJucator,
   getJucatoriByTeamId,
   getJucatorById,
+  getAllJucatori,
+  getJucatorByName,
   updateJucator,
 };

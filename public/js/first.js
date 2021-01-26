@@ -607,6 +607,86 @@ const deleteEchipaServer = (id) => {
 //#endregion
 
 //#region jucatori
+//#region adaugaJucator
+const populatePlayersDropdown = async () => {
+  const echipe = (await getAllTeams()).teams;
+  let dropdownechipe = dom('echipe');
+  for (let i = 0; i < echipe.length; i++) {
+    let option = document.createElement('option');
+    option.id = echipe[i].idEchipa;
+    option.innerHTML = echipe[i].nume;
+    dropdownechipe.appendChild(option);
+  }
+};
+
+const adaugaJucator = async () => {
+  const nume = dom('nume').value;
+  const nationalitate = dom('nationalitate').value;
+  const dataNastere = new Date(dom('dataNastere').value).getTime();
+  const e = dom('echipe');
+  const idEchipa = parseInt(e.options[e.selectedIndex].id);
+  const valoare = dom('valoare').value;
+
+  if (!idEchipa || isNaN(valoare) || parseInt(valoare) <= 0) {
+    alert('Something wrong');
+  } else {
+    body = {
+      nume,
+      nationalitate,
+      dataNastere,
+      idEchipa,
+      valoare,
+    };
+    const result = await addJucatorServer(body);
+    if (result.status === 200) {
+      window.location.href = '../html/jucatoriList.html';
+    }
+  }
+};
+
+const addJucatorServer = (body) => {
+  return new Promise(function (resolve, reject) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', '/createJucator');
+    // the request will send json, UTF8 data
+    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+    xhr.onload = function () {
+      resolve({
+        status: this.status,
+        statusText: xhr.statusText,
+      });
+    };
+    xhr.onerror = function () {
+      reject({
+        status: this.status,
+        statusText: xhr.statusText,
+      });
+    };
+    // transmit the object converted to JSON
+    xhr.send(JSON.stringify(body));
+    // every time when a change in HTTP request status occures
+    xhr.onreadystatechange = function () {
+      // if HTTP request is DONE
+      if (xhr.readyState === 4) {
+        // if status is ok
+        if (xhr.status === 200) {
+          dom('message').innerHTML = 'Success. Player is saved.';
+          resolve({
+            status: this.status,
+            statusText: xhr.statusText,
+          });
+          // if status is not ok
+          // display error message and the response from server
+        } else {
+          dom('message').innerHTML =
+            'Error. Player is not saved. ' + xhr.responseText;
+        }
+      }
+    };
+  });
+};
+//#endregion
+
 //#region allPlayers
 allPlayersLoad = async () => {
   data = await getAllPlayers();
@@ -622,7 +702,10 @@ allPlayersLoad = async () => {
       tdNume.appendChild(link);
 
       let tdEchipa = document.createElement('td');
-      tdEchipa.innerHTML = players[i].numeEchipa;
+      link = document.createElement('a');
+      link.href = '../html/echipaInfo.html?id=' + players[i].idEchipa;
+      link.innerHTML = players[i].numeEchipa;
+      tdEchipa.appendChild(link);
 
       let tdDelete = document.createElement('input');
       tdDelete.type = 'button';
