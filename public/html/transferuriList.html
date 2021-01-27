@@ -12,6 +12,12 @@
   <body onload="allTransfersLoad()">
     <button id="home"><a href="../index.html">Home</a></button>
     <h2>Istoric transferuri</h2>
+    <input
+      type="search"
+      id="search"
+      placeholder="Cauta jucator"
+      onkeyup="searchTransfer()"
+    />
     <table id="transfers">
       <tr>
         <th>Nume jucator</th>

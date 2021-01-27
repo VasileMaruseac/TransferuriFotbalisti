@@ -115,6 +115,20 @@ const getAllLeagues = () => {
     xhr.send();
   });
 };
+
+const searchLeagues = () => {
+  const searchValue = dom('search').value.toLowerCase();
+
+  const leagues = dom('leagues').childNodes;
+  for (let i = 0; i < leagues.length; i++) {
+    const leagueName = leagues[i].childNodes[0].innerText.toLowerCase();
+    if (leagueName.includes(searchValue)) {
+      leagues[i].style.display = '';
+    } else {
+      leagues[i].style.display = 'none';
+    }
+  }
+};
 //#endregion
 
 //#region getOneLeague
@@ -422,7 +436,6 @@ const getAllTeams = () => {
 
 const searchTeams = () => {
   const searchValue = dom('search').value.toLowerCase();
-  console.log(searchValue);
 
   const teams = dom('teams').childNodes;
   for (let i = 0; i < teams.length; i++) {
@@ -766,6 +779,20 @@ getAllPlayers = () => {
     xhr.send();
   });
 };
+
+const searchPlayer = () => {
+  const searchValue = dom('search').value.toLowerCase();
+
+  const players = dom('players').childNodes;
+  for (let i = 2; i < players.length; i++) {
+    const playerName = players[i].childNodes[0].innerText.toLowerCase();
+    if (playerName.includes(searchValue)) {
+      players[i].style.display = '';
+    } else {
+      players[i].style.display = 'none';
+    }
+  }
+};
 //#endregion
 
 //#region getOnePlayer
@@ -1020,6 +1047,20 @@ const getAllTransfers = () => {
     };
     xhr.send();
   });
+};
+
+const searchTransfer = () => {
+  const searchValue = dom('search').value.toLowerCase();
+
+  const players = dom('transfers').childNodes;
+  for (let i = 2; i < players.length; i++) {
+    const playerName = players[i].childNodes[0].innerText.toLowerCase();
+    if (playerName.includes(searchValue)) {
+      players[i].style.display = '';
+    } else {
+      players[i].style.display = 'none';
+    }
+  }
 };
 //#endregion
 

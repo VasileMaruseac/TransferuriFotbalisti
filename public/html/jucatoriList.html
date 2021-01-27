@@ -12,6 +12,12 @@
   <body onload="allPlayersLoad()">
     <button id="home"><a href="../index.html">Home</a></button>
     <h2>Lista jucatorilor</h2>
+    <input
+      type="search"
+      id="search"
+      placeholder="Cauta jucator"
+      onkeyup="searchPlayer()"
+    />
     <table id="players">
       <tr>
         <th>Nume jucator</th>
