@@ -62,6 +62,12 @@ const addTransfer = async ({idJucator, idEchipaNoua, pret}) => {
     return 'eroare create';
   }
 
+  myCache.del([
+    'allTransfers',
+    `player_${idJucator}`,
+    `team_${idEchipaNoua}`,
+    `team_${echipaVeche.idEchipa}`,
+  ]);
   return 'success';
 };
 

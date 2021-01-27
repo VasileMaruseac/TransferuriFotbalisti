@@ -235,6 +235,8 @@ const oneLeagueLoad = async () => {
     nume.innerHTML += league.nume;
     const tara = dom('tara');
     tara.innerHTML += league.tara;
+    const lastUpdatedTime = dom('lastUpdatedTime');
+    lastUpdatedTime.innerHTML += new Date(parseInt(league.lastUpdatedTime));
     tableEchipe = dom('echipe');
     league.echipe.forEach((echipa) => {
       const tr = document.createElement('tr');
