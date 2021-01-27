@@ -65,6 +65,54 @@ const addTransfer = async ({idJucator, idEchipaNoua, pret}) => {
   return 'success';
 };
 
+const getAllTransfers = async (body) => {
+  const getFromCache = myCache.get('allTransfers');
+  if (getFromCache) {
+    console.log('FROM CACHE');
+    return getFromCache;
+  }
+  const result = [];
+  const t = await dalTransferuri.getAllTransfers();
+  const objPers = {};
+  const objEchipe = {};
+  for (let i = 0; i < t.length; i++) {
+    const transferCurent = t[i].dataValues;
+    const idJucator = transferCurent.idJucator;
+    const idEchipaVeche = transferCurent.idEchipaVeche;
+    const idEchipaNoua = transferCurent.idEchipaNoua;
+    if (!objPers[idJucator]) {
+      const j = await dalJucatori.getJucatorById(idJucator);
+      objPers[idJucator] = j.nume;
+    }
+    transferCurent.numeJucator = objPers[idJucator];
+
+    if (!objEchipe[idEchipaVeche]) {
+      const e = await dalEchipe.getEchipaById(idEchipaVeche);
+      objEchipe[idEchipaVeche] = e.nume;
+    }
+    transferCurent.numeEchipaVeche = objEchipe[idEchipaVeche];
+
+    if (!objEchipe[idEchipaNoua]) {
+      const e = await dalEchipe.getEchipaById(idEchipaNoua);
+      objEchipe[idEchipaNoua] = e.nume;
+    }
+    transferCurent.numeEchipaNoua = objEchipe[idEchipaNoua];
+
+    result.push(transferCurent);
+  }
+  myCache.set('allTransfers', result);
+  console.log('FROM DB');
+  return result;
+};
+
+const deleteTransfer = async (id) => {
+  await dalTransferuri.deleteTransfer(id);
+  myCache.del(['allTransfers']);
+  return 'success';
+};
+
 module.exports = {
   addTransfer,
+  getAllTransfers,
+  deleteTransfer,
 };

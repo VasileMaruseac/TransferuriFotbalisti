@@ -27,6 +27,23 @@ const addTransfer = async (body) => {
   }
 };
 
+const getAllTransfers = async () => {
+  const transferuri = await models.transferuri;
+  try {
+    const result = await transferuri.findAll();
+    return result;
+  } catch (err) {
+    return 'error';
+  }
+};
+
+const deleteTransfer = async (id) => {
+  var transferuri = await models.transferuri;
+  await transferuri.destroy({where: {idTransfer: id}});
+};
+
 module.exports = {
   addTransfer,
+  getAllTransfers,
+  deleteTransfer,
 };
