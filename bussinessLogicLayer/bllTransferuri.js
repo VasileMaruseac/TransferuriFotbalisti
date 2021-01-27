@@ -5,7 +5,7 @@ const NodeCache = require('node-cache');
 const myCache = new NodeCache();
 
 const addTransfer = async ({idJucator, idEchipaNoua, pret}) => {
-  if (!idJucator || !!idEchipaNoua || isNaN(pret) || pret <= 0) {
+  if (!idJucator || !idEchipaNoua || isNaN(pret) || pret <= 0) {
     return 'validation error';
   }
   const jucator = await dalJucatori.getJucatorById(idJucator);

@@ -1,26 +1,10 @@
 // a shortcut for html element (dom = document object model)
 const dom = (id) => document.getElementById(id);
 
-//#region ligi
-//#region addLeague
-const addLeague = async () => {
-  const nume = dom('nume').value;
-  const tara = dom('tara').value;
-  body = {
-    nume,
-    tara,
-  };
-
-  const result = await addLeagueServer(body);
-  if (result.status === 200) {
-    window.location.href = '../html/leaguesList.html';
-  }
-};
-
-const addLeagueServer = (body) => {
+const addEntityServer = (body, route) => {
   return new Promise(function (resolve, reject) {
     let xhr = new XMLHttpRequest();
-    xhr.open('POST', '/createLiga');
+    xhr.open('POST', route);
     // the request will send json, UTF8 data
     xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
     xhr.onload = function () {
@@ -43,7 +27,7 @@ const addLeagueServer = (body) => {
       if (xhr.readyState === 4) {
         // if status is ok
         if (xhr.status === 200) {
-          dom('message').innerHTML = 'Success. League is saved.';
+          dom('message').innerHTML = 'Success. Entity saved.';
           resolve({
             status: this.status,
             statusText: xhr.statusText,
@@ -52,11 +36,27 @@ const addLeagueServer = (body) => {
           // display error message and the response from server
         } else {
           dom('message').innerHTML =
-            'Error. League is not saved. ' + xhr.responseText;
+            'Error. Entity not saved. ' + xhr.responseText;
         }
       }
     };
   });
+};
+
+//#region ligi
+//#region addLeague
+const addLeague = async () => {
+  const nume = dom('nume').value;
+  const tara = dom('tara').value;
+  body = {
+    nume,
+    tara,
+  };
+
+  const result = await addEntityServer(body, '/createLiga');
+  if (result.status === 200) {
+    window.location.href = '../html/leaguesList.html';
+  }
 };
 //#endregion
 
@@ -328,53 +328,11 @@ const addTeam = async () => {
       buget,
     };
 
-    const result = await addTeamServer(body);
+    const result = await addEntityServer(body, '/createEchipa');
     if (result.status === 200) {
       window.location.href = '../html/echipeList.html';
     }
   }
-};
-
-const addTeamServer = (body) => {
-  return new Promise(function (resolve, reject) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('POST', '/createEchipa');
-    // the request will send json, UTF8 data
-    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-    xhr.onload = function () {
-      resolve({
-        status: this.status,
-        statusText: xhr.statusText,
-      });
-    };
-    xhr.onerror = function () {
-      reject({
-        status: this.status,
-        statusText: xhr.statusText,
-      });
-    };
-    // transmit the object converted to JSON
-    xhr.send(JSON.stringify(body));
-    // every time when a change in HTTP request status occures
-    xhr.onreadystatechange = function () {
-      // if HTTP request is DONE
-      if (xhr.readyState === 4) {
-        // if status is ok
-        if (xhr.status === 200) {
-          dom('message').innerHTML = 'Success. Team is saved.';
-          resolve({
-            status: this.status,
-            statusText: xhr.statusText,
-          });
-          // if status is not ok
-          // display error message and the response from server
-        } else {
-          dom('message').innerHTML =
-            'Error. Team is not saved. ' + xhr.responseText;
-        }
-      }
-    };
-  });
 };
 //#endregion
 
@@ -665,53 +623,11 @@ const adaugaJucator = async () => {
       idEchipa,
       valoare,
     };
-    const result = await addJucatorServer(body);
+    const result = await addEntityServer(body, '/createJucator');
     if (result.status === 200) {
       window.location.href = '../html/jucatoriList.html';
     }
   }
-};
-
-const addJucatorServer = (body) => {
-  return new Promise(function (resolve, reject) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('POST', '/createJucator');
-    // the request will send json, UTF8 data
-    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-    xhr.onload = function () {
-      resolve({
-        status: this.status,
-        statusText: xhr.statusText,
-      });
-    };
-    xhr.onerror = function () {
-      reject({
-        status: this.status,
-        statusText: xhr.statusText,
-      });
-    };
-    // transmit the object converted to JSON
-    xhr.send(JSON.stringify(body));
-    // every time when a change in HTTP request status occures
-    xhr.onreadystatechange = function () {
-      // if HTTP request is DONE
-      if (xhr.readyState === 4) {
-        // if status is ok
-        if (xhr.status === 200) {
-          dom('message').innerHTML = 'Success. Player is saved.';
-          resolve({
-            status: this.status,
-            statusText: xhr.statusText,
-          });
-          // if status is not ok
-          // display error message and the response from server
-        } else {
-          dom('message').innerHTML =
-            'Error. Player is not saved. ' + xhr.responseText;
-        }
-      }
-    };
-  });
 };
 //#endregion
 
@@ -1006,8 +922,16 @@ const allTransfersLoad = async () => {
       link.innerHTML = transfers[i].numeJucator;
       tdNume.appendChild(link);
 
-      tdEchipaVeche.innerHTML = transfers[i].numeEchipaVeche;
-      tdEchipaNoua.innerHTML = transfers[i].numeEchipaNoua;
+      link = document.createElement('a');
+      link.href = '../html/echipaInfo.html?id=' + transfers[i].idEchipaVeche;
+      link.innerHTML = transfers[i].numeEchipaVeche;
+      tdEchipaVeche.appendChild(link);
+
+      link = document.createElement('a');
+      link.href = '../html/echipaInfo.html?id=' + transfers[i].idEchipaNoua;
+      link.innerHTML = transfers[i].numeEchipaNoua;
+      tdEchipaNoua.appendChild(link);
+
       tdSuma.innerHTML = transfers[i].pret;
       tr.appendChild(tdNume);
       tr.appendChild(tdEchipaVeche);
@@ -1100,53 +1024,11 @@ const addTransfer = async () => {
       pret: suma,
     };
 
-    const result = await addTransferServer(body);
+    const result = await addEntityServer(body, '/addTransfer');
     if (result.status === 200) {
       window.location.href = '../html/transferuriList.html';
     }
   }
-};
-
-const addTransferServer = (body) => {
-  return new Promise(function (resolve, reject) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('POST', '/addTransfer');
-    // the request will send json, UTF8 data
-    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-    xhr.onload = function () {
-      resolve({
-        status: this.status,
-        statusText: xhr.statusText,
-      });
-    };
-    xhr.onerror = function () {
-      reject({
-        status: this.status,
-        statusText: xhr.statusText,
-      });
-    };
-    // transmit the object converted to JSON
-    xhr.send(JSON.stringify(body));
-    // every time when a change in HTTP request status occures
-    xhr.onreadystatechange = function () {
-      // if HTTP request is DONE
-      if (xhr.readyState === 4) {
-        // if status is ok
-        if (xhr.status === 200) {
-          dom('message').innerHTML = 'Success. Transfer is saved.';
-          resolve({
-            status: this.status,
-            statusText: xhr.statusText,
-          });
-          // if status is not ok
-          // display error message and the response from server
-        } else {
-          dom('message').innerHTML =
-            'Error. User is not saved. ' + xhr.responseText;
-        }
-      }
-    };
-  });
 };
 //#endregion
 
