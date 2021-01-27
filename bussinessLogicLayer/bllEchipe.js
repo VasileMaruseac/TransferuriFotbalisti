@@ -29,6 +29,7 @@ const addEchipa = async (body) => {
       }
       // update echipa, deleted: false
       teamResult.deleted = false;
+      teamResult.buget = body.buget;
       const resultUpdate = await dalEchipe.updateEchipa(
         teamResult.idEchipa,
         teamResult

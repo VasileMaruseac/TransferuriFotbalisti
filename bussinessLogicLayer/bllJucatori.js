@@ -29,6 +29,7 @@ const addJucator = async (body) => {
       }
       // update jucator, deleted: false
       playerResult.deleted = false;
+      playerResult.valoare = body.valoare;
       const resultUpdate = await dalJucatori.updateJucator(
         playerResult.idJucator,
         playerResult
