@@ -137,6 +137,33 @@ const updateEntityServer = (id, body, route) => {
   });
 };
 
+const deleteEntityServer = (id, route) => {
+  return new Promise(function (resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('DELETE', route + id);
+    xhr.onload = function () {
+      if (xhr.status == 200) {
+        resolve({
+          status: this.status,
+          statusText: xhr.statusText,
+        });
+      } else {
+        resolve({
+          status: this.status,
+          statusText: xhr.statusText,
+        });
+      }
+    };
+    xhr.onerror = function () {
+      reject({
+        status: this.status,
+        statusText: xhr.statusText,
+      });
+    };
+    xhr.send();
+  });
+};
+
 //#region ligi
 //#region addLeague
 const addLeague = async () => {
@@ -266,35 +293,8 @@ const updateLeague = async () => {
 
 //#region delete Liga
 const deleteLiga = async (id) => {
-  await deleteLigaServer(id);
+  await deleteEntityServer(id, '/deleteLiga/');
   window.location.href = '../html/leaguesList.html';
-};
-
-const deleteLigaServer = (id) => {
-  return new Promise(function (resolve, reject) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('DELETE', '/deleteLiga/' + id);
-    xhr.onload = function () {
-      if (xhr.status == 200) {
-        resolve({
-          status: this.status,
-          statusText: xhr.statusText,
-        });
-      } else {
-        resolve({
-          status: this.status,
-          statusText: xhr.statusText,
-        });
-      }
-    };
-    xhr.onerror = function () {
-      reject({
-        status: this.status,
-        statusText: xhr.statusText,
-      });
-    };
-    xhr.send();
-  });
 };
 //#endregion
 //#endregion
@@ -403,7 +403,7 @@ const oneTeamLoad = async () => {
       tdDelete.type = 'button';
       tdDelete.value = 'Delete';
       tdDelete.addEventListener('click', function () {
-        deleteJucator(echipa.idEchipa);
+        deleteJucator(jucator.idJucator);
       });
       tr.appendChild(tdNume);
       tr.appendChild(tdDelete);
@@ -464,35 +464,8 @@ const updateTeam = async () => {
 
 //#region delete Echipa
 const deleteEchipa = async (id) => {
-  await deleteEchipaServer(id);
+  await deleteEntityServer(id, '/deleteEchipa/');
   window.location.href = '../html/echipeList.html';
-};
-
-const deleteEchipaServer = (id) => {
-  return new Promise(function (resolve, reject) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('DELETE', '/deleteEchipa/' + id);
-    xhr.onload = function () {
-      if (xhr.status == 200) {
-        resolve({
-          status: this.status,
-          statusText: xhr.statusText,
-        });
-      } else {
-        resolve({
-          status: this.status,
-          statusText: xhr.statusText,
-        });
-      }
-    };
-    xhr.onerror = function () {
-      reject({
-        status: this.status,
-        statusText: xhr.statusText,
-      });
-    };
-    xhr.send();
-  });
 };
 //#endregion
 //#endregion
@@ -675,35 +648,8 @@ const updateJucator = async () => {
 
 //#region delete Jucator
 const deleteJucator = async (id) => {
-  await deleteJucatorServer(id);
+  await deleteEntityServer(id, '/deleteJucator/');
   window.location.href = '../html/jucatoriList.html';
-};
-
-const deleteJucatorServer = (id) => {
-  return new Promise(function (resolve, reject) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('DELETE', '/deleteJucator/' + id);
-    xhr.onload = function () {
-      if (xhr.status == 200) {
-        resolve({
-          status: this.status,
-          statusText: xhr.statusText,
-        });
-      } else {
-        resolve({
-          status: this.status,
-          statusText: xhr.statusText,
-        });
-      }
-    };
-    xhr.onerror = function () {
-      reject({
-        status: this.status,
-        statusText: xhr.statusText,
-      });
-    };
-    xhr.send();
-  });
 };
 //#endregion
 //#endregion
@@ -817,35 +763,8 @@ const addTransfer = async () => {
 
 //#region delete Transfer
 const deleteTransfer = async (id) => {
-  await deleteTransferServer(id);
+  await deleteEntityServer(id, '/deleteTransfer/');
   window.location.href = '../html/transferuriList.html';
-};
-
-const deleteTransferServer = (id) => {
-  return new Promise(function (resolve, reject) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('DELETE', '/deleteTransfer/' + id);
-    xhr.onload = function () {
-      if (xhr.status == 200) {
-        resolve({
-          status: this.status,
-          statusText: xhr.statusText,
-        });
-      } else {
-        resolve({
-          status: this.status,
-          statusText: xhr.statusText,
-        });
-      }
-    };
-    xhr.onerror = function () {
-      reject({
-        status: this.status,
-        statusText: xhr.statusText,
-      });
-    };
-    xhr.send();
-  });
 };
 //#endregion
 //#endregion
