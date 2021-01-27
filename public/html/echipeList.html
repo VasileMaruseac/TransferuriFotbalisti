@@ -11,6 +11,13 @@
 
   <body onload="allTeamsLoad()">
     <button id="home"><a href="../index.html">Home</a></button>
+    <br />
+    <input
+      type="search"
+      id="search"
+      placeholder="Cauta echipa"
+      onkeyup="searchTeams()"
+    />
     <table id="teams"></table>
     <button><a href="./addTeam.html">Adauga</a></button>
   </body>

@@ -419,6 +419,21 @@ const getAllTeams = () => {
     xhr.send();
   });
 };
+
+const searchTeams = () => {
+  const searchValue = dom('search').value.toLowerCase();
+  console.log(searchValue);
+
+  const teams = dom('teams').childNodes;
+  for (let i = 0; i < teams.length; i++) {
+    const teamName = teams[i].childNodes[0].innerText.toLowerCase();
+    if (teamName.includes(searchValue)) {
+      teams[i].style.display = '';
+    } else {
+      teams[i].style.display = 'none';
+    }
+  }
+};
 //#endregion
 
 //#region getOneTeam
