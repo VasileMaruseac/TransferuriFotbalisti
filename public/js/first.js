@@ -43,6 +43,100 @@ const addEntityServer = (body, route) => {
   });
 };
 
+const getAllEntitiesServer = (route) => {
+  return new Promise(function (resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', route);
+    xhr.onload = function () {
+      if (xhr.status == 200) {
+        resolve({
+          status: this.status,
+          statusText: xhr.statusText,
+          items: JSON.parse(xhr.response),
+        });
+      } else {
+        resolve({
+          status: this.status,
+          statusText: xhr.statusText,
+        });
+      }
+    };
+    xhr.onerror = function () {
+      reject({
+        status: this.status,
+        statusText: xhr.statusText,
+      });
+    };
+    xhr.send();
+  });
+};
+
+const getOneEntityServer = (id, route) => {
+  return new Promise(function (resolve, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', route + id);
+    xhr.onload = function () {
+      if (xhr.status == 200) {
+        resolve({
+          status: this.status,
+          statusText: xhr.statusText,
+          item: JSON.parse(xhr.response),
+        });
+      } else {
+        resolve({
+          status: this.status,
+          statusText: xhr.statusText,
+        });
+      }
+    };
+    xhr.onerror = function () {
+      reject({
+        status: this.status,
+        statusText: xhr.statusText,
+      });
+    };
+    xhr.send();
+  });
+};
+
+const updateEntityServer = (id, body, route) => {
+  return new Promise(function (resolve, reject) {
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', route + id);
+    // the request will send json, UTF8 data
+    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+    xhr.onload = function () {
+      resolve({
+        status: this.status,
+        statusText: xhr.statusText,
+      });
+    };
+    xhr.onerror = function () {
+      reject({
+        status: this.status,
+        statusText: xhr.statusText,
+      });
+    };
+    // transmit the object converted to JSON
+    xhr.send(JSON.stringify(body));
+    // every time when a change in HTTP request status occures
+    xhr.onreadystatechange = function () {
+      // if HTTP request is DONE
+      if (xhr.readyState === 4) {
+        // if status is ok
+        if (xhr.status === 200) {
+          dom('message').innerHTML = 'Success. Item actualizat.';
+          resolve();
+          // if status is not ok
+          // display error message and the response from server
+        } else {
+          dom('message').innerHTML = 'Error. ' + xhr.responseText;
+        }
+      }
+    };
+  });
+};
+
 //#region ligi
 //#region addLeague
 const addLeague = async () => {
@@ -61,11 +155,11 @@ const addLeague = async () => {
 //#endregion
 
 //#region allLeagues
-allLeaguesLoad = async () => {
-  data = await getAllLeagues();
+const allLeaguesLoad = async () => {
+  data = await getAllEntitiesServer('/getLigi');
   if (data.status == 200) {
     let table = dom('leagues');
-    const leagues = [...data.leagues];
+    const leagues = [...data.items];
     for (let i = 0; i < leagues.length; i++) {
       let tr = document.createElement('tr');
       let td = document.createElement('td');
@@ -88,34 +182,6 @@ allLeaguesLoad = async () => {
   }
 };
 
-const getAllLeagues = () => {
-  return new Promise(function (resolve, reject) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', '/getLigi');
-    xhr.onload = function () {
-      if (xhr.status == 200) {
-        resolve({
-          status: this.status,
-          statusText: xhr.statusText,
-          leagues: JSON.parse(xhr.response),
-        });
-      } else {
-        resolve({
-          status: this.status,
-          statusText: xhr.statusText,
-        });
-      }
-    };
-    xhr.onerror = function () {
-      reject({
-        status: this.status,
-        statusText: xhr.statusText,
-      });
-    };
-    xhr.send();
-  });
-};
-
 const searchLeagues = () => {
   const searchValue = dom('search').value.toLowerCase();
 
@@ -135,9 +201,9 @@ const searchLeagues = () => {
 const oneLeagueLoad = async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const id = urlParams.get('id');
-  data = await getOneLeague(id);
+  data = await getOneEntityServer(id, '/getLiga/');
   if (data.status == 200) {
-    const league = data.league;
+    const league = data.item;
     const nume = dom('nume');
     nume.innerHTML += league.nume;
     const tara = dom('tara');
@@ -168,42 +234,13 @@ const oneLeagueLoad = async () => {
     alert('No league');
   }
 };
-
-const getOneLeague = (id) => {
-  return new Promise(function (resolve, reject) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', '/getLiga/' + id);
-    xhr.onload = function () {
-      if (xhr.status == 200) {
-        resolve({
-          status: this.status,
-          statusText: xhr.statusText,
-          league: JSON.parse(xhr.response),
-        });
-      } else {
-        resolve({
-          status: this.status,
-          statusText: xhr.statusText,
-        });
-      }
-    };
-    xhr.onerror = function () {
-      reject({
-        status: this.status,
-        statusText: xhr.statusText,
-      });
-    };
-    xhr.send();
-  });
-};
-
 //#endregion
 
 //#region updateLeague
 const populateInputsUpdateLeague = async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const id = urlParams.get('id');
-  let league = (await getOneLeague(id)).league;
+  let league = (await getOneEntityServer(id, '/getLiga/')).item;
 
   const nume = dom('nume');
   nume.value = league.nume;
@@ -222,46 +259,8 @@ const updateLeague = async () => {
     nume,
     tara,
   };
-  await updateLeagueServer(body, idLiga);
+  await updateEntityServer(idLiga, body, '/updateLiga/');
   window.location.href = '../html/leagueInfo.html?id=' + idLiga;
-};
-
-const updateLeagueServer = (body, id) => {
-  return new Promise(function (resolve, reject) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('POST', '/updateLiga/' + id);
-    // the request will send json, UTF8 data
-    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-    xhr.onload = function () {
-      resolve({
-        status: this.status,
-        statusText: xhr.statusText,
-      });
-    };
-    xhr.onerror = function () {
-      reject({
-        status: this.status,
-        statusText: xhr.statusText,
-      });
-    };
-    // transmit the object converted to JSON
-    xhr.send(JSON.stringify(body));
-    // every time when a change in HTTP request status occures
-    xhr.onreadystatechange = function () {
-      // if HTTP request is DONE
-      if (xhr.readyState === 4) {
-        // if status is ok
-        if (xhr.status === 200) {
-          dom('message').innerHTML = 'Success. Liga actualizata.';
-          resolve();
-          // if status is not ok
-          // display error message and the response from server
-        } else {
-          dom('message').innerHTML = 'Error. ' + xhr.responseText;
-        }
-      }
-    };
-  });
 };
 //#endregion
 
@@ -303,7 +302,7 @@ const deleteLigaServer = (id) => {
 //#region echipe
 //#region addTeam
 const populateTeamsDropdown = async () => {
-  const ligi = (await getAllLeagues()).leagues;
+  const ligi = (await getAllEntitiesServer('/getLigi')).items;
   let dropdownLigi = dom('ligi');
   for (let i = 0; i < ligi.length; i++) {
     let option = document.createElement('option');
@@ -338,10 +337,10 @@ const addTeam = async () => {
 
 //#region allTeams
 const allTeamsLoad = async () => {
-  data = await getAllTeams();
+  data = await getAllEntitiesServer('/getEchipe');
   if (data.status == 200) {
     let table = dom('teams');
-    const teams = [...data.teams];
+    const teams = [...data.items];
     for (let i = 0; i < teams.length; i++) {
       let tr = document.createElement('tr');
       let td = document.createElement('td');
@@ -364,34 +363,6 @@ const allTeamsLoad = async () => {
   }
 };
 
-const getAllTeams = () => {
-  return new Promise(function (resolve, reject) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', '/getEchipe');
-    xhr.onload = function () {
-      if (xhr.status == 200) {
-        resolve({
-          status: this.status,
-          statusText: xhr.statusText,
-          teams: JSON.parse(xhr.response),
-        });
-      } else {
-        resolve({
-          status: this.status,
-          statusText: xhr.statusText,
-        });
-      }
-    };
-    xhr.onerror = function () {
-      reject({
-        status: this.status,
-        statusText: xhr.statusText,
-      });
-    };
-    xhr.send();
-  });
-};
-
 const searchTeams = () => {
   const searchValue = dom('search').value.toLowerCase();
 
@@ -411,9 +382,9 @@ const searchTeams = () => {
 const oneTeamLoad = async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const id = urlParams.get('id');
-  data = await getOneTeam(id);
+  data = await getOneEntityServer(id, '/getEchipa/');
   if (data.status == 200) {
-    const team = data.team;
+    const team = data.item;
     const nume = dom('nume');
     nume.innerHTML += team.nume;
     const liga = dom('liga');
@@ -444,42 +415,14 @@ const oneTeamLoad = async () => {
     alert('No team');
   }
 };
-
-const getOneTeam = (id) => {
-  return new Promise(function (resolve, reject) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', '/getEchipa/' + id);
-    xhr.onload = function () {
-      if (xhr.status == 200) {
-        resolve({
-          status: this.status,
-          statusText: xhr.statusText,
-          team: JSON.parse(xhr.response),
-        });
-      } else {
-        resolve({
-          status: this.status,
-          statusText: xhr.statusText,
-        });
-      }
-    };
-    xhr.onerror = function () {
-      reject({
-        status: this.status,
-        statusText: xhr.statusText,
-      });
-    };
-    xhr.send();
-  });
-};
 //#endregion
 
 //#region edit team
 const populateInputsUpdateEchipa = async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const id = urlParams.get('id');
-  let echipa = (await getOneTeam(id)).team;
-  const ligi = (await getAllLeagues()).leagues;
+  let echipa = (await getOneEntityServer(id, '/getEchipa/')).item;
+  const ligi = (await getAllEntitiesServer('/getLigi')).items;
   let dropdownLigi = dom('ligi');
   for (let i = 0; i < ligi.length; i++) {
     let option = document.createElement('option');
@@ -513,47 +456,9 @@ const updateTeam = async () => {
       idLiga,
       buget,
     };
-    await updateEchipaServer(body, idEchipa);
+    await updateEntityServer(idEchipa, body, '/updateEchipa/');
     window.location.href = '../html/echipaInfo.html?id=' + idEchipa;
   }
-};
-
-const updateEchipaServer = (body, id) => {
-  return new Promise(function (resolve, reject) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('POST', '/updateEchipa/' + id);
-    // the request will send json, UTF8 data
-    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-    xhr.onload = function () {
-      resolve({
-        status: this.status,
-        statusText: xhr.statusText,
-      });
-    };
-    xhr.onerror = function () {
-      reject({
-        status: this.status,
-        statusText: xhr.statusText,
-      });
-    };
-    // transmit the object converted to JSON
-    xhr.send(JSON.stringify(body));
-    // every time when a change in HTTP request status occures
-    xhr.onreadystatechange = function () {
-      // if HTTP request is DONE
-      if (xhr.readyState === 4) {
-        // if status is ok
-        if (xhr.status === 200) {
-          dom('message').innerHTML = 'Success. Echipa actualizata.';
-          resolve();
-          // if status is not ok
-          // display error message and the response from server
-        } else {
-          dom('message').innerHTML = 'Error. ' + xhr.responseText;
-        }
-      }
-    };
-  });
 };
 //#endregion
 
@@ -595,7 +500,7 @@ const deleteEchipaServer = (id) => {
 //#region jucatori
 //#region adaugaJucator
 const populatePlayersDropdown = async () => {
-  const echipe = (await getAllTeams()).teams;
+  const echipe = (await getAllEntitiesServer('/getEchipe')).items;
   let dropdownechipe = dom('echipe');
   for (let i = 0; i < echipe.length; i++) {
     let option = document.createElement('option');
@@ -633,10 +538,10 @@ const adaugaJucator = async () => {
 
 //#region allPlayers
 allPlayersLoad = async () => {
-  data = await getAllPlayers();
+  data = await getAllEntitiesServer('/getJucatori');
   if (data.status == 200) {
     let table = dom('players');
-    const players = [...data.players];
+    const players = [...data.items];
     for (let i = 0; i < players.length; i++) {
       let tr = document.createElement('tr');
       let tdNume = document.createElement('td');
@@ -668,34 +573,6 @@ allPlayersLoad = async () => {
   }
 };
 
-getAllPlayers = () => {
-  return new Promise(function (resolve, reject) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', '/getJucatori');
-    xhr.onload = function () {
-      if (xhr.status == 200) {
-        resolve({
-          status: this.status,
-          statusText: xhr.statusText,
-          players: JSON.parse(xhr.response),
-        });
-      } else {
-        resolve({
-          status: this.status,
-          statusText: xhr.statusText,
-        });
-      }
-    };
-    xhr.onerror = function () {
-      reject({
-        status: this.status,
-        statusText: xhr.statusText,
-      });
-    };
-    xhr.send();
-  });
-};
-
 const searchPlayer = () => {
   const searchValue = dom('search').value.toLowerCase();
 
@@ -712,34 +589,6 @@ const searchPlayer = () => {
 //#endregion
 
 //#region getOnePlayer
-const getOnePlayer = (id) => {
-  return new Promise(function (resolve, reject) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', '/getJucator/' + id);
-    xhr.onload = function () {
-      if (xhr.status == 200) {
-        resolve({
-          status: this.status,
-          statusText: xhr.statusText,
-          player: JSON.parse(xhr.response),
-        });
-      } else {
-        resolve({
-          status: this.status,
-          statusText: xhr.statusText,
-        });
-      }
-    };
-    xhr.onerror = function () {
-      reject({
-        status: this.status,
-        statusText: xhr.statusText,
-      });
-    };
-    xhr.send();
-  });
-};
-
 const onePlayerLoad = async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const id = urlParams.get('id');
@@ -748,7 +597,7 @@ const onePlayerLoad = async () => {
   let dataNastere = dom('dataNastere');
   let valoare = dom('valoare');
   let echipa = dom('echipa');
-  let jucator = (await getOnePlayer(id)).player;
+  let jucator = (await getOneEntityServer(id, '/getJucator/')).item;
   nume.innerHTML += ' ' + jucator.nume;
   nationalitate.innerHTML += ' ' + jucator.nationalitate;
   echipa.innerHTML += ' ' + jucator.numeEchipa;
@@ -771,9 +620,9 @@ const onePlayerLoad = async () => {
 const populateInputsUpdateJucator = async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const id = urlParams.get('id');
-  let jucator = (await getOnePlayer(id)).player;
+  let jucator = (await getOneEntityServer(id, '/getJucator/')).item;
 
-  const echipe = (await getAllTeams()).teams;
+  const echipe = (await getAllEntitiesServer('/getEchipe')).items;
   let dropdownEchipe = dom('echipe');
   for (let i = 0; i < echipe.length; i++) {
     let option = document.createElement('option');
@@ -818,47 +667,9 @@ const updateJucator = async () => {
       idEchipa,
       valoare,
     };
-    await updateJucatorServer(body, idJucator);
+    await updateEntityServer(idJucator, body, '/updateJucator/');
     window.location.href = '../html/jucatorInfo.html?id=' + idJucator;
   }
-};
-
-const updateJucatorServer = (body, id) => {
-  return new Promise(function (resolve, reject) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('POST', '/updateJucator/' + id);
-    // the request will send json, UTF8 data
-    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-    xhr.onload = function () {
-      resolve({
-        status: this.status,
-        statusText: xhr.statusText,
-      });
-    };
-    xhr.onerror = function () {
-      reject({
-        status: this.status,
-        statusText: xhr.statusText,
-      });
-    };
-    // transmit the object converted to JSON
-    xhr.send(JSON.stringify(body));
-    // every time when a change in HTTP request status occures
-    xhr.onreadystatechange = function () {
-      // if HTTP request is DONE
-      if (xhr.readyState === 4) {
-        // if status is ok
-        if (xhr.status === 200) {
-          dom('message').innerHTML = 'Success. Jucator actualizat.';
-          resolve();
-          // if status is not ok
-          // display error message and the response from server
-        } else {
-          dom('message').innerHTML = 'Error. ' + xhr.responseText;
-        }
-      }
-    };
-  });
 };
 //#endregion
 
@@ -900,10 +711,10 @@ const deleteJucatorServer = (id) => {
 //#region transferuri
 //#region allTransfers
 const allTransfersLoad = async () => {
-  data = await getAllTransfers();
+  data = await getAllEntitiesServer('/getTransfers');
   if (data.status == 200) {
     let table = dom('transfers');
-    const transfers = [...data.transfers];
+    const transfers = [...data.items];
     for (let i = 0; i < transfers.length; i++) {
       let tr = document.createElement('tr');
       let tdNume = document.createElement('td');
@@ -945,34 +756,6 @@ const allTransfersLoad = async () => {
   }
 };
 
-const getAllTransfers = () => {
-  return new Promise(function (resolve, reject) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', '/getTransfers');
-    xhr.onload = function () {
-      if (xhr.status == 200) {
-        resolve({
-          status: this.status,
-          statusText: xhr.statusText,
-          transfers: JSON.parse(xhr.response),
-        });
-      } else {
-        resolve({
-          status: this.status,
-          statusText: xhr.statusText,
-        });
-      }
-    };
-    xhr.onerror = function () {
-      reject({
-        status: this.status,
-        statusText: xhr.statusText,
-      });
-    };
-    xhr.send();
-  });
-};
-
 const searchTransfer = () => {
   const searchValue = dom('search').value.toLowerCase();
 
@@ -990,7 +773,7 @@ const searchTransfer = () => {
 
 // #region add transfer
 const populateTransfersDropdown = async () => {
-  const jucatori = (await getAllPlayers()).players;
+  const jucatori = (await getAllEntitiesServer('/getJucatori')).items;
   let dropdownJuc = dom('jucatori');
   for (let i = 0; i < jucatori.length; i++) {
     let option = document.createElement('option');
@@ -999,7 +782,7 @@ const populateTransfersDropdown = async () => {
     dropdownJuc.appendChild(option);
   }
 
-  const echipe = (await getAllTeams()).teams;
+  const echipe = (await getAllEntitiesServer('/getEchipe')).items;
   let dropdownEchipe = dom('echipe');
   for (let i = 0; i < echipe.length; i++) {
     let option = document.createElement('option');

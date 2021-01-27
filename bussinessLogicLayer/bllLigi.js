@@ -59,9 +59,11 @@ const getLigaById = async (id) => {
   result = await dalLigi.getLigaById(id);
   const echipe = await dalEchipe.getEchipeByLeagueId(id);
   result.echipe = [];
-  for (let i = 0; i < echipe.length; i++) {
-    if (!echipe[i].dataValues.deleted) {
-      result.echipe.push(echipe[i].dataValues);
+  if (echipe !== 'notFound') {
+    for (let i = 0; i < echipe.length; i++) {
+      if (!echipe[i].dataValues.deleted) {
+        result.echipe.push(echipe[i].dataValues);
+      }
     }
   }
   myCache.set(`league_${id}`, result);
