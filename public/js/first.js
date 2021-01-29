@@ -493,7 +493,13 @@ const adaugaJucator = async () => {
   const idEchipa = parseInt(e.options[e.selectedIndex].id);
   const valoare = dom('valoare').value;
 
-  if (!idEchipa || isNaN(valoare) || parseInt(valoare) <= 0) {
+  if (
+    !nume.trim().length ||
+    !nationalitate.trim().length ||
+    !idEchipa ||
+    isNaN(valoare) ||
+    parseInt(valoare) <= 0
+  ) {
     alert('Something wrong');
   } else {
     body = {

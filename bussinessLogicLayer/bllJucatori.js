@@ -1,4 +1,3 @@
-const {body} = require('express-validator');
 const NodeCache = require('node-cache');
 const myCache = new NodeCache();
 const dalEchipe = require('../dataLayer/dalEchipe');
