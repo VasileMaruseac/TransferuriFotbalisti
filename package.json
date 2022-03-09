@@ -32,6 +32,6 @@
     "node-cache": "^5.1.2",
     "sequelize": "^6.3.5",
     "sequelize-auto": "^0.7.2",
-    "typeorm-model-generator": "^0.4.3"
+    "typeorm-model-generator": "^0.4.2"
   }
 }
